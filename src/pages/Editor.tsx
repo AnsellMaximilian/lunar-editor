@@ -109,7 +109,7 @@ export default function Editor() {
               }`}
               onClick={() => setRightViewMode("TABLE")}
             >
-              <BsViewStacked /> <span>Table Data</span>
+              <BsViewStacked /> <span>Table View</span>
             </button>
             <button
               className={`px-4 py-2 flex gap-2 items-center ${
@@ -117,7 +117,7 @@ export default function Editor() {
               }`}
               onClick={() => setRightViewMode("PLUGIN")}
             >
-              <BsGear /> <span>Plugin</span>
+              <BsGear /> <span>Plugin View</span>
             </button>
           </div>
           {rightViewMode === "TABLE" ? (

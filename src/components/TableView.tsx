@@ -2,7 +2,7 @@ import { Dialog } from "@headlessui/react";
 import { useState, Dispatch } from "react";
 import { BsPlus } from "react-icons/bs";
 import { nanoid } from "nanoid";
-import { BsGear, BsTable } from "react-icons/bs";
+import { BsGear, BsTable, BsChevronDown } from "react-icons/bs";
 
 export type ColumnType = "STRING" | "NUMBER";
 export type TableData = (string | number)[][];
@@ -68,9 +68,9 @@ export default function TableView({
   };
 
   return (
-    <div className="grow p-4 bg-white flex items-center justify-center">
+    <div className="grow p-4 bg-white flex flex-col">
       {tableConfig ? (
-        <div className="w-full">
+        <div className="grow w-full">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-medium flex gap-2 items-center">
               <BsTable /> <span>{tableConfig.name}</span>
@@ -85,7 +85,12 @@ export default function TableView({
                 <th className="py-1 px-2 border border-zinc-300">#</th>
                 {tableConfig.columnConfigs.map((col) => (
                   <th key={col.id} className="py-1 px-2 border border-zinc-300">
-                    {col.name}
+                    <div className="flex items-center justify-between">
+                      <span>{col.name}</span>
+                      <button>
+                        <BsChevronDown />
+                      </button>
+                    </div>
                   </th>
                 ))}
               </tr>
@@ -108,7 +113,7 @@ export default function TableView({
           </table>
         </div>
       ) : (
-        <div className="flex flex-col gap-2 max-w-sm">
+        <div className="grow mx-auto flex flex-col justify-center items-center gap-2 max-w-sm">
           <div className="text-center">
             You haven't setup your mock table data yet. In order to preview your
             plugin, you need to set up your table structure first.
