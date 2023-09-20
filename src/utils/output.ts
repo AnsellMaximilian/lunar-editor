@@ -4,7 +4,7 @@ import { TableData } from "./types";
 export const configHtml = (tableData: TableData | null) => `
 <div id="config">
     <div id="config__backdrop">
-    <div id="config__content">
+    <div id="config__container">
         <div id="config__title">Configure Plugin</div>
         <div id="config__content">
             <outerbase-plugin-table-configuration 
@@ -24,6 +24,7 @@ export const configCss = `
         position: fixed;
         inset: 0;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        overflow: scroll;
     }
     
     #config__backdrop {
@@ -34,11 +35,14 @@ export const configCss = `
         display: flex;
         justify-content: center;
         align-items: center;
+        padding: 1rem;
     }
     
-    #config__content {
-        max-width: 730px;
+    #config__container {
+        max-width: 100%;
+        max-height: 100%;
     }
+
     
     #config__title {
         padding: 1rem;

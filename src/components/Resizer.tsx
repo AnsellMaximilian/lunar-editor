@@ -24,6 +24,8 @@ export default function Resizer({ onResize, onMouseUp }: Props) {
   );
 
   const handleMouseUp = useCallback(() => {
+    document.body.style.userSelect = "auto";
+
     setInitialMousPos(null);
     onMouseUp();
   }, [onMouseUp]);
@@ -41,6 +43,7 @@ export default function Resizer({ onResize, onMouseUp }: Props) {
       className="bg-zinc-800 cursor-move"
       style={{ width: 10, minWidth: 10 }}
       onMouseDown={(e) => {
+        document.body.style.userSelect = "none";
         setInitialMousPos({ x: e.clientX, y: e.clientY });
       }}
     ></div>

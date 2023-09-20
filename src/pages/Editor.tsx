@@ -45,7 +45,7 @@ export default function Editor() {
   }, [tableConfig]);
 
   return (
-    <div className="bg-zinc-600">
+    <div className="bg-zinc-600 h-screen flex flex-col">
       <div className="text-white p-4 flex justify-between items-center">
         {isEditingPluginName ? (
           <input
@@ -77,7 +77,7 @@ export default function Editor() {
           </div>
         </div>
       </div>
-      <div className="flex">
+      <div className="grow flex">
         <div className="flex flex-col" style={{ width: editorWidth.current }}>
           <div className="flex text-white text-sm bg-zinc-700">
             <button
@@ -106,7 +106,6 @@ export default function Editor() {
             </button>
           </div>
           <CodeEditor
-            height="75vh"
             defaultLanguage="javascript"
             language="javascript"
             theme="vs-dark"
