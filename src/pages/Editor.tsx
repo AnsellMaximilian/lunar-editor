@@ -1,8 +1,12 @@
 import CodeEditor, { OnChange } from "@monaco-editor/react";
 import { useState, useRef, useEffect, useMemo } from "react";
 import { BsGear, BsViewStacked, BsChevronDown, BsPencil } from "react-icons/bs";
-import TableView, { TableConfig, TableData } from "../components/TableView";
+import { RowValue, TableConfig, TableData } from "../utils/types";
 import { faker } from "@faker-js/faker";
+import TableView from "../components/TableView";
+import { jsonToAttribute } from "../utils/attributes";
+
+type LeftViewMode = "CONFIG" | "VIEW" | "EDITOR";
 
 export default function Editor() {
   const handleEditorChange: OnChange = (value) => {
@@ -15,6 +19,7 @@ export default function Editor() {
   const [rightViewMode, setRightViewMode] = useState<"TABLE" | "PLUGIN">(
     "TABLE"
   );
+  const [leftViewMode, setLeftViewMode] = useState<LeftViewMode>("VIEW");
 
   const [tableConfig, setTableConfig] = useState<TableConfig | null>(null);
 
@@ -26,23 +31,25 @@ export default function Editor() {
     }
   }, [isEditingPluginName, pluginNameInputRef]);
 
-  const tableData: TableData = useMemo(() => {
+  const tableData: TableData | null = useMemo(() => {
     if (tableConfig) {
       const rows: TableData = [];
       for (let i = 1; i <= tableConfig.rows; i++) {
         rows.push(
-          tableConfig.columnConfigs.map((col) => {
+          tableConfig.columnConfigs.reduce((row, col) => {
+            let rowValue: RowValue;
             if (col.type === "STRING") {
-              return faker.word.words();
+              rowValue = faker.word.words();
             } else {
-              return faker.number.float();
+              rowValue = faker.number.float();
             }
-          })
+            return { ...row, [col.name]: rowValue };
+          }, {})
         );
       }
       return rows;
     }
-    return [];
+    return null;
   }, [tableConfig]);
 
   return (
@@ -81,13 +88,28 @@ export default function Editor() {
       <div className="grid grid-cols-12">
         <div className="col-span-6 flex flex-col">
           <div className="flex text-white text-sm bg-zinc-700">
-            <button className="hover:bg-vs-dark px-4 py-2 bg-zinc-800 flex gap-2 items-center">
+            <button
+              onClick={() => setLeftViewMode("VIEW")}
+              className={`px-4 py-2 flex gap-2 items-center ${
+                leftViewMode === "VIEW" ? "bg-vs-dark" : "bg-zinc-800 "
+              }`}
+            >
               <BsViewStacked /> <span>View</span>
             </button>
-            <button className="hover:bg-vs-dark px-4 py-2 bg-zinc-800 flex gap-2 items-center">
+            <button
+              onClick={() => setLeftViewMode("CONFIG")}
+              className={`px-4 py-2 flex gap-2 items-center ${
+                leftViewMode === "CONFIG" ? "bg-vs-dark" : "bg-zinc-800 "
+              }`}
+            >
               <BsGear /> <span>Configuration</span>
             </button>
-            <button className="hover:bg-vs-dark px-4 py-2 bg-zinc-800 flex gap-2 items-center">
+            <button
+              onClick={() => setLeftViewMode("EDITOR")}
+              className={`px-4 py-2 flex gap-2 items-center ${
+                leftViewMode === "EDITOR" ? "bg-vs-dark" : "bg-zinc-800 "
+              }`}
+            >
               <BsPencil /> <span>Editor</span>
             </button>
           </div>
@@ -132,10 +154,28 @@ export default function Editor() {
               srcDoc={`
                 <html>
                     <head>
-                        <script>${js}</script>
+                        <script>
+                          ${js}
+                          window.customElements.define(
+                            "outerbase-plugin-table",
+                            OuterbasePluginTable_$PLUGIN_ID
+                          );
+                          window.customElements.define(
+                            "outerbase-plugin-table-configuration",
+                            OuterbasePluginTableConfiguration_$PLUGIN_ID
+                          );
+                        </script>
                     </head>
                     <body>
-                    <custom-element></custom-element>
+                          <outerbase-plugin-table 
+                            configuration="{}"
+                            ${
+                              tableData
+                                ? `tableValue="${jsonToAttribute(tableData)}"`
+                                : ""
+                            }
+                            >
+                          </outerbase-plugin-table>
                     </body>
                 </html>
             `}

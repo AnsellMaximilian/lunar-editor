@@ -3,21 +3,12 @@ import { useState, Dispatch } from "react";
 import { BsPlus } from "react-icons/bs";
 import { nanoid } from "nanoid";
 import { BsGear, BsTable, BsChevronDown } from "react-icons/bs";
-
-export type ColumnType = "STRING" | "NUMBER";
-export type TableData = (string | number)[][];
-
-export interface ColumnConfig {
-  id: string;
-  name: string;
-  type: ColumnType;
-}
-
-export interface TableConfig {
-  name: string;
-  rows: number;
-  columnConfigs: ColumnConfig[];
-}
+import {
+  ColumnConfig,
+  ColumnType,
+  TableConfig,
+  TableData,
+} from "../utils/types";
 
 export default function TableView({
   setTableConfig,
@@ -26,7 +17,7 @@ export default function TableView({
 }: {
   setTableConfig: Dispatch<React.SetStateAction<TableConfig | null>>;
   tableConfig: TableConfig | null;
-  tableData: TableData;
+  tableData: TableData | null;
 }) {
   const [tableName, setTableName] = useState("");
   const [tableRows, setTableRows] = useState(10);
@@ -69,7 +60,7 @@ export default function TableView({
 
   return (
     <div className="grow p-4 bg-white flex flex-col">
-      {tableConfig ? (
+      {tableConfig && tableData ? (
         <div className="grow w-full">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-medium flex gap-2 items-center">
@@ -102,9 +93,9 @@ export default function TableView({
                     {i + 1}
                   </td>
 
-                  {row.map((col, i) => (
+                  {tableConfig.columnConfigs.map((col, i) => (
                     <td className="py-1 px-2 border border-zinc-300" key={i}>
-                      {col}
+                      {row[col.name]}
                     </td>
                   ))}
                 </tr>
