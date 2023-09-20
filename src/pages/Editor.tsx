@@ -119,12 +119,14 @@ export default function Editor() {
             setEditorWidth((prev) => ({ ...prev, initial: prev.current }))
           }
           onResize={(deltaPos) => {
-            setEditorWidth((prev) => {
-              return {
-                ...prev,
-                current: prev.initial + deltaPos.x,
-              };
-            });
+            if (editorWidth.current <= 900 || deltaPos.x <= 0) {
+              setEditorWidth((prev) => {
+                return {
+                  ...prev,
+                  current: prev.initial + deltaPos.x,
+                };
+              });
+            }
           }}
         />
         <div className="grow flex flex-col">
