@@ -46,6 +46,8 @@ export default function Resizer({ onResize, onMouseUp }: Props) {
         document.body.style.userSelect = "none";
         setInitialMousPos({ x: e.clientX, y: e.clientY });
       }}
-    ></div>
+    >
+      {initialMousPos && <div className="fixed inset-0"></div>}
+    </div>
   );
 }
