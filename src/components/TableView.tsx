@@ -190,6 +190,7 @@ export default function TableView({
                     >
                       <option value="STRING">String</option>
                       <option value="NUMBER">Number</option>
+                      <option value="IMAGE">Image</option>
                     </select>
                     <button
                       className="bg-zinc-800 text-white px-4 py-2 rounded-md"

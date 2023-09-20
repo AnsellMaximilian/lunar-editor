@@ -1,10 +1,12 @@
 import CodeEditor, { OnChange } from "@monaco-editor/react";
 import { useState, useRef, useEffect, useMemo } from "react";
 import { BsGear, BsViewStacked, BsChevronDown, BsPencil } from "react-icons/bs";
-import { RowValue, TableConfig, TableData } from "../utils/types";
-import { faker } from "@faker-js/faker";
+import { TableConfig, TableData } from "../utils/types";
 import TableView from "../components/TableView";
 import { jsonToAttribute } from "../utils/attributes";
+import { generateTableData } from "../utils/tables";
+import { configCss, configHtml } from "../utils/output";
+import Resizer from "../components/Resizer";
 
 type LeftViewMode = "CONFIG" | "VIEW" | "EDITOR";
 
@@ -24,6 +26,10 @@ export default function Editor() {
   const [tableConfig, setTableConfig] = useState<TableConfig | null>(null);
 
   const pluginNameInputRef = useRef<HTMLInputElement>(null);
+  const [editorWidth, setEditorWidth] = useState({
+    current: 300,
+    initial: 300,
+  });
 
   useEffect(() => {
     if (pluginNameInputRef.current && isEditingPluginName) {
@@ -33,21 +39,7 @@ export default function Editor() {
 
   const tableData: TableData | null = useMemo(() => {
     if (tableConfig) {
-      const rows: TableData = [];
-      for (let i = 1; i <= tableConfig.rows; i++) {
-        rows.push(
-          tableConfig.columnConfigs.reduce((row, col) => {
-            let rowValue: RowValue;
-            if (col.type === "STRING") {
-              rowValue = faker.word.words();
-            } else {
-              rowValue = faker.number.float();
-            }
-            return { ...row, [col.name]: rowValue };
-          }, {})
-        );
-      }
-      return rows;
+      return generateTableData(tableConfig);
     }
     return null;
   }, [tableConfig]);
@@ -85,8 +77,8 @@ export default function Editor() {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-12">
-        <div className="col-span-6 flex flex-col">
+      <div className="flex">
+        <div className="flex flex-col" style={{ width: editorWidth.current }}>
           <div className="flex text-white text-sm bg-zinc-700">
             <button
               onClick={() => setLeftViewMode("VIEW")}
@@ -123,7 +115,20 @@ export default function Editor() {
             className="grow"
           />
         </div>
-        <div className="col-span-6 flex flex-col">
+        <Resizer
+          onMouseUp={() =>
+            setEditorWidth((prev) => ({ ...prev, initial: prev.current }))
+          }
+          onResize={(deltaPos) => {
+            setEditorWidth((prev) => {
+              return {
+                ...prev,
+                current: prev.initial + deltaPos.x,
+              };
+            });
+          }}
+        />
+        <div className="grow flex flex-col">
           <div className="flex text-white text-sm bg-zinc-700 justify-end">
             <button
               className={`px-4 py-2 flex gap-2 items-center ${
@@ -154,6 +159,9 @@ export default function Editor() {
               srcDoc={`
                 <html>
                     <head>
+                        <style>
+                          ${configCss}
+                        </style>
                         <script>
                           ${js}
                           window.customElements.define(
@@ -176,6 +184,7 @@ export default function Editor() {
                             }
                             >
                           </outerbase-plugin-table>
+                          ${configHtml(tableData)}
                     </body>
                 </html>
             `}
