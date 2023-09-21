@@ -147,16 +147,22 @@ export default function Editor() {
               <BsGear /> <span>Plugin View</span>
             </button>
           </div>
-          {rightViewMode === "TABLE" ? (
+          <div
+            className={`grow flex flex-col ${
+              rightViewMode === "TABLE" ? "flex" : "hidden"
+            }`}
+          >
             <TableView
               tableData={tableData}
               setTableConfig={setTableConfig}
               tableConfig={tableConfig}
             />
-          ) : (
-            <iframe
-              className="bg-white grow"
-              srcDoc={`
+          </div>
+          <iframe
+            className={`bg-white grow ${
+              rightViewMode === "PLUGIN" ? "flex" : "hidden"
+            }`}
+            srcDoc={`
                 <html>
                     <head>
                         <style>
@@ -180,11 +186,10 @@ export default function Editor() {
                     </body>
                 </html>
             `}
-              title="output"
-              sandbox="allow-scripts"
-              width="100%"
-            ></iframe>
-          )}
+            title="output"
+            sandbox="allow-scripts"
+            width="100%"
+          ></iframe>
         </div>
       </div>
     </div>
