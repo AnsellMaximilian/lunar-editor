@@ -3,9 +3,8 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { BsGear, BsViewStacked, BsChevronDown, BsPencil } from "react-icons/bs";
 import { TableConfig, TableData } from "../utils/types";
 import TableView from "../components/TableView";
-import { jsonToAttribute } from "../utils/attributes";
 import { generateTableData } from "../utils/tables";
-import { configCss, configHtml } from "../utils/output";
+import { configCss, configHtml, customEventListenersJs } from "../utils/output";
 import Resizer from "../components/Resizer";
 
 type LeftViewMode = "CONFIG" | "VIEW" | "EDITOR";
@@ -170,22 +169,14 @@ export default function Editor() {
                             OuterbasePluginTable_$PLUGIN_ID
                           );
                           window.customElements.define(
-                            "outerbase-plugin-table-configuration",
-                            OuterbasePluginTableConfiguration_$PLUGIN_ID
+                            "outerbase-plugin-configuration",
+                            OuterbasePluginConfiguration_$PLUGIN_ID
                           );
                         </script>
                     </head>
                     <body>
-                          <outerbase-plugin-table 
-                            configuration="{}"
-                            ${
-                              tableData
-                                ? `tableValue="${jsonToAttribute(tableData)}"`
-                                : ""
-                            }
-                            >
-                          </outerbase-plugin-table>
                           ${configHtml(tableData)}
+                          <script>${customEventListenersJs(tableData)}</script>
                     </body>
                 </html>
             `}

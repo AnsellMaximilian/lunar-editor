@@ -7,11 +7,11 @@ export const configHtml = (tableData: TableData | null) => `
     <div id="config__container">
         <div id="config__title">Configure Plugin</div>
         <div id="config__content">
-            <outerbase-plugin-table-configuration 
+            <outerbase-plugin-configuration 
                 configuration="{}"
                 ${tableData ? `tableValue="${jsonToAttribute(tableData)}"` : ""}
                 >
-            </outerbase-plugin-table-configuration>
+            </outerbase-plugin-configuration>
         </div>
         
     </div>
@@ -49,3 +49,26 @@ export const configCss = `
         border-bottom: .8px rgb(208, 208, 208) solid;
     }
 `;
+
+export const customEventListenersJs = (tableData: TableData | null) => {
+  return `
+    const config = document.querySelector("#config");
+    const pluginConfiguration = document.querySelector("outerbase-plugin-configuration");
+    pluginConfiguration.addEventListener("custom-change", (e) => {
+        const {action, value} = e.detail;
+        pluginConfiguration.setAttribute("configuration", JSON.stringify(value));
+        config.style.display = "none";
+        const pluginTable = document.createElement("outerbase-plugin-table");
+        pluginTable.setAttribute("configuration", JSON.stringify(value));
+        ${
+          tableData
+            ? `pluginTable.setAttribute("tableValue", "${jsonToAttribute(
+                tableData
+              )}");`
+            : ""
+        }
+        document.body.appendChild(pluginTable)
+        
+    })
+`;
+};
