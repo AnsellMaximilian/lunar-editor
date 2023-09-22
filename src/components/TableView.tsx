@@ -79,7 +79,7 @@ export default function TableView({
   // };
 
   return (
-    <div className="grow p-4 bg-white flex flex-col ">
+    <div className="grow p-4 bg-white flex flex-col overflow-x-hidden">
       {tableConfig && tableData ? (
         <div className="grow w-full flex flex-col">
           <div className="flex items-center justify-between mb-4">
@@ -101,7 +101,7 @@ export default function TableView({
           </div>
         </div>
       ) : (
-        <div className="grow mx-auto flex flex-col justify-center items-center gap-2 max-w-sm">
+        <div className="grow mx-auto flex flex-col justify-center items-center gap-2 w-[380px]">
           <div className="text-center">
             You haven't set up your mock table data yet. In order to preview
             your plugin, you need to set up your table structure first.
