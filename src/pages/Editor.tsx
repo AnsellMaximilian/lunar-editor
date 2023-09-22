@@ -128,8 +128,8 @@ export default function Editor() {
             }
           }}
         />
-        <div className="grow flex flex-col">
-          <div className="flex text-white text-sm bg-zinc-700 justify-end">
+        <div className="grow flex flex-col overflow-x-auto basis-0">
+          <div className="flex text-white text-sm bg-zinc-700 justify-end whitespace-nowrap">
             <button
               className={`px-4 py-2 flex gap-2 items-center ${
                 rightViewMode === "TABLE" ? "bg-vs-dark" : "bg-zinc-800 "
@@ -148,7 +148,7 @@ export default function Editor() {
             </button>
           </div>
           <div
-            className={`grow flex flex-col ${
+            className={`grow flex-col ${
               rightViewMode === "TABLE" ? "flex" : "hidden"
             }`}
           >

@@ -59,7 +59,7 @@ export default function TableView({
   };
 
   return (
-    <div className="grow p-4 bg-white flex flex-col">
+    <div className="grow p-4 bg-white flex flex-col ">
       {tableConfig && tableData ? (
         <div className="grow w-full">
           <div className="flex items-center justify-between mb-4">
@@ -70,38 +70,43 @@ export default function TableView({
               <BsGear />
             </button>
           </div>
-          <table className="w-full border-collapse border border-zinc-300 ">
-            <thead>
-              <tr>
-                <th className="py-1 px-2 border border-zinc-300">#</th>
-                {tableConfig.columnConfigs.map((col) => (
-                  <th key={col.id} className="py-1 px-2 border border-zinc-300">
-                    <div className="flex items-center justify-between">
-                      <span>{col.name}</span>
-                      <button>
-                        <BsChevronDown />
-                      </button>
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {tableData.map((row, i) => (
-                <tr key={i}>
-                  <td className="py-1 px-2 border border-zinc-300 text-center">
-                    {i + 1}
-                  </td>
-
-                  {tableConfig.columnConfigs.map((col, i) => (
-                    <td className="py-1 px-2 border border-zinc-300" key={i}>
-                      {row[col.name]}
-                    </td>
+          <div className="relative overflow-x-auto ">
+            <table className="w-full border-collapse border border-zinc-300 whitespace-nowrap">
+              <thead>
+                <tr>
+                  <th className="py-1 px-2 border border-zinc-300">#</th>
+                  {tableConfig.columnConfigs.map((col) => (
+                    <th
+                      key={col.id}
+                      className="py-1 px-2 border border-zinc-300"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span>{col.name}</span>
+                        <button>
+                          <BsChevronDown />
+                        </button>
+                      </div>
+                    </th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {tableData.map((row, i) => (
+                  <tr key={i}>
+                    <td className="py-1 px-2 border border-zinc-300 text-center">
+                      {i + 1}
+                    </td>
+
+                    {tableConfig.columnConfigs.map((col, i) => (
+                      <td className="py-1 px-2 border border-zinc-300" key={i}>
+                        {row[col.name]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       ) : (
         <div className="grow mx-auto flex flex-col justify-center items-center gap-2 max-w-sm">
