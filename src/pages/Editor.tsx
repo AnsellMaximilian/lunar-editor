@@ -3,12 +3,12 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import {
   BsGear,
   BsViewStacked,
-  BsChevronDown,
   BsPencil,
   BsCodeSlash,
   BsTable,
 } from "react-icons/bs";
-import { TableConfig, TableData } from "../utils/types";
+import { FiCopy } from "react-icons/fi";
+import { PluginMode, TableConfig, TableData } from "../utils/types";
 import TableView from "../components/TableView";
 import { generateTableData } from "../utils/tables";
 import { configCss, configHtml, customEventListenersJs } from "../utils/output";
@@ -27,6 +27,7 @@ export default function Editor() {
   const [rightViewMode, setRightViewMode] = useState<"TABLE" | "PLUGIN">(
     "TABLE"
   );
+  const [pluginMode, setPluginMode] = useState<PluginMode>("TABLE");
   const [leftViewMode, setLeftViewMode] = useState<LeftViewMode>("VIEW");
 
   const [tableConfig, setTableConfig] = useState<TableConfig | null>(null);
@@ -75,17 +76,38 @@ export default function Editor() {
         )}
         <div className="flex gap-2">
           <button className="bg-zinc-800 rounded-lg px-4 py-2 flex items-center">
+            <FiCopy />
+          </button>
+          <button className="bg-zinc-800 rounded-lg px-4 py-2 flex items-center">
             <BsGear />
           </button>
-          <div className="bg-zinc-800 rounded-lg px-4 py-2 flex gap-2 items-center">
-            <div>Columns</div>
-            <BsChevronDown />
+          <div className="rounded-lg flex overflow-hidden">
+            <button
+              onClick={() => setPluginMode("COLUMN")}
+              className={`px-4 py-2 ${
+                pluginMode === "COLUMN"
+                  ? "bg-zinc-800 hover:bg-zinc-900"
+                  : "bg-zinc-700 text-zinc-500 hover:bg-zinc-800"
+              }`}
+            >
+              Column
+            </button>
+            <button
+              onClick={() => setPluginMode("TABLE")}
+              className={`px-4 py-2 ${
+                pluginMode === "TABLE"
+                  ? "bg-zinc-800 hover:bg-zinc-900"
+                  : "bg-zinc-700 text-zinc-500 hover:bg-zinc-800"
+              }`}
+            >
+              Table
+            </button>
           </div>
         </div>
       </div>
       <div className="grow flex">
         <div className="flex flex-col" style={{ width: editorWidth.current }}>
-          <div className="flex text-white text-sm bg-zinc-700">
+          <div className="flex text-white text-sm bg-zinc-700 whitespace-nowrap">
             <button
               onClick={() => setLeftViewMode("VIEW")}
               className={`px-4 py-2 flex gap-2 items-center ${
@@ -94,22 +116,6 @@ export default function Editor() {
             >
               <BsCodeSlash /> <span>Plugin Code</span>
             </button>
-            {/* <button
-              onClick={() => setLeftViewMode("CONFIG")}
-              className={`px-4 py-2 flex gap-2 items-center ${
-                leftViewMode === "CONFIG" ? "bg-vs-dark" : "bg-zinc-800 "
-              }`}
-            >
-              <BsGear /> <span>Configuration</span>
-            </button>
-            <button
-              onClick={() => setLeftViewMode("EDITOR")}
-              className={`px-4 py-2 flex gap-2 items-center ${
-                leftViewMode === "EDITOR" ? "bg-vs-dark" : "bg-zinc-800 "
-              }`}
-            >
-              <BsPencil /> <span>Editor</span>
-            </button> */}
           </div>
           <CodeEditor
             defaultLanguage="javascript"
@@ -145,14 +151,16 @@ export default function Editor() {
             >
               <BsTable /> <span>Table View</span>
             </button>
-            <button
-              className={`px-4 py-2 flex gap-2 items-center ${
-                rightViewMode === "PLUGIN" ? "bg-vs-dark" : "bg-zinc-800"
-              }`}
-              onClick={() => setRightViewMode("PLUGIN")}
-            >
-              <BsViewStacked /> <span>Plugin View</span>
-            </button>
+            {pluginMode === "TABLE" && (
+              <button
+                className={`px-4 py-2 flex gap-2 items-center ${
+                  rightViewMode === "PLUGIN" ? "bg-vs-dark" : "bg-zinc-800"
+                }`}
+                onClick={() => setRightViewMode("PLUGIN")}
+              >
+                <BsViewStacked /> <span>Plugin View</span>
+              </button>
+            )}
           </div>
           <div
             className={`grow flex-col ${

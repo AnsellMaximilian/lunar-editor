@@ -24,3 +24,5 @@ export type JsonValue =
   | string
   | JsonValue[]
   | JsonObject;
+
+export type PluginMode = "TABLE" | "COLUMN";
