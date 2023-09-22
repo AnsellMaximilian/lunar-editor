@@ -1,6 +1,13 @@
 import CodeEditor, { OnChange } from "@monaco-editor/react";
 import { useState, useRef, useEffect, useMemo } from "react";
-import { BsGear, BsViewStacked, BsChevronDown, BsPencil } from "react-icons/bs";
+import {
+  BsGear,
+  BsViewStacked,
+  BsChevronDown,
+  BsPencil,
+  BsCodeSlash,
+  BsTable,
+} from "react-icons/bs";
 import { TableConfig, TableData } from "../utils/types";
 import TableView from "../components/TableView";
 import { generateTableData } from "../utils/tables";
@@ -85,9 +92,9 @@ export default function Editor() {
                 leftViewMode === "VIEW" ? "bg-vs-dark" : "bg-zinc-800 "
               }`}
             >
-              <BsViewStacked /> <span>View</span>
+              <BsCodeSlash /> <span>Plugin Code</span>
             </button>
-            <button
+            {/* <button
               onClick={() => setLeftViewMode("CONFIG")}
               className={`px-4 py-2 flex gap-2 items-center ${
                 leftViewMode === "CONFIG" ? "bg-vs-dark" : "bg-zinc-800 "
@@ -102,7 +109,7 @@ export default function Editor() {
               }`}
             >
               <BsPencil /> <span>Editor</span>
-            </button>
+            </button> */}
           </div>
           <CodeEditor
             defaultLanguage="javascript"
@@ -136,7 +143,7 @@ export default function Editor() {
               }`}
               onClick={() => setRightViewMode("TABLE")}
             >
-              <BsViewStacked /> <span>Table View</span>
+              <BsTable /> <span>Table View</span>
             </button>
             <button
               className={`px-4 py-2 flex gap-2 items-center ${
@@ -144,7 +151,7 @@ export default function Editor() {
               }`}
               onClick={() => setRightViewMode("PLUGIN")}
             >
-              <BsGear /> <span>Plugin View</span>
+              <BsViewStacked /> <span>Plugin View</span>
             </button>
           </div>
           <div

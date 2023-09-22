@@ -24,7 +24,7 @@ export const configCss = `
         position: fixed;
         inset: 0;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        overflow: scroll;
+        overflow: auto;
     }
     
     #config__backdrop {
