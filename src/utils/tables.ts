@@ -9,6 +9,8 @@ const valueGenerator = (columnType: ColumnType): RowValue => {
       return faker.number.float();
     case "IMAGE":
       return faker.image.url();
+    case "TRUE_FALSE":
+      return faker.datatype.boolean() ? "true" : "false";
     default:
       return faker.word.words();
   }

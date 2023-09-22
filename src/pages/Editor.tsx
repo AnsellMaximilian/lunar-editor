@@ -171,6 +171,8 @@ export default function Editor() {
               tableData={tableData}
               setTableConfig={setTableConfig}
               tableConfig={tableConfig}
+              pluginMode={pluginMode}
+              pluginJs={js}
             />
           </div>
           <iframe
@@ -190,8 +192,8 @@ export default function Editor() {
                             OuterbasePluginTable_$PLUGIN_ID
                           );
                           window.customElements.define(
-                            "outerbase-plugin-configuration",
-                            OuterbasePluginConfiguration_$PLUGIN_ID
+                              "outerbase-plugin-configuration",
+                              OuterbasePluginConfiguration_$PLUGIN_ID
                           );
                         </script>
                     </head>

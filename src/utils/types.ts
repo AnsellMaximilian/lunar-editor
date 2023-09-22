@@ -1,4 +1,4 @@
-export type ColumnType = "STRING" | "NUMBER" | "IMAGE";
+export type ColumnType = "STRING" | "NUMBER" | "IMAGE" | "TRUE_FALSE";
 export type RowValue = string | number;
 export type Row = { [key: string]: RowValue[] };
 export type TableData = Row[];

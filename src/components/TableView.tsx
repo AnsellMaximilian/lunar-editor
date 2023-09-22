@@ -1,23 +1,28 @@
 import { Dialog } from "@headlessui/react";
 import { useState, Dispatch } from "react";
-import { BsPlus } from "react-icons/bs";
 import { nanoid } from "nanoid";
-import { BsGear, BsTable, BsChevronDown } from "react-icons/bs";
+import { BsGear, BsTable, BsPlus } from "react-icons/bs";
 import {
   ColumnConfig,
   ColumnType,
+  PluginMode,
   TableConfig,
   TableData,
 } from "../utils/types";
+import { pluginTable } from "../utils/output";
 
 export default function TableView({
+  pluginJs,
   setTableConfig,
   tableConfig,
   tableData,
+  pluginMode,
 }: {
   setTableConfig: Dispatch<React.SetStateAction<TableConfig | null>>;
   tableConfig: TableConfig | null;
   tableData: TableData | null;
+  pluginMode: PluginMode;
+  pluginJs: string;
 }) {
   const [tableName, setTableName] = useState("");
   const [tableRows, setTableRows] = useState(10);
@@ -26,11 +31,20 @@ export default function TableView({
   const [columnName, setColumnName] = useState("");
   const [columnType, setColumnType] = useState<ColumnType>("STRING");
 
+  // const [columnPluginApplication, setColumnPluginApplication] = useState<{
+  //   [key: string]: boolean;
+  // }>({});
+
   const handleAddColumnConfig = () => {
     if (!columnName) return;
     setColumnConfigs((prev) => [
       ...prev,
-      { name: columnName, type: columnType, id: nanoid() },
+      {
+        name: columnName,
+        type: columnType,
+        id: nanoid(),
+        isPluginApplied: false,
+      },
     ]);
     setColumnName("");
   };
@@ -58,10 +72,16 @@ export default function TableView({
     }
   };
 
+  // const toggleColumnPlugin = (colId: string) => {
+  //   if (columnPluginApplication[colId])
+  //     setColumnPluginApplication((prev) => ({ ...prev, [colId]: false }));
+  //   else setColumnPluginApplication((prev) => ({ ...prev, [colId]: true }));
+  // };
+
   return (
     <div className="grow p-4 bg-white flex flex-col ">
       {tableConfig && tableData ? (
-        <div className="grow w-full">
+        <div className="grow w-full flex flex-col">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-medium flex gap-2 items-center">
               <BsTable /> <span>{tableConfig.name}</span>
@@ -70,49 +90,21 @@ export default function TableView({
               <BsGear />
             </button>
           </div>
-          <div className="relative overflow-x-auto ">
-            <table className="w-full border-collapse border border-zinc-300 whitespace-nowrap">
-              <thead>
-                <tr>
-                  <th className="py-1 px-2 border border-zinc-300">#</th>
-                  {tableConfig.columnConfigs.map((col) => (
-                    <th
-                      key={col.id}
-                      className="py-1 px-2 border border-zinc-300"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span>{col.name}</span>
-                        <button>
-                          <BsChevronDown />
-                        </button>
-                      </div>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {tableData.map((row, i) => (
-                  <tr key={i}>
-                    <td className="py-1 px-2 border border-zinc-300 text-center">
-                      {i + 1}
-                    </td>
-
-                    {tableConfig.columnConfigs.map((col, i) => (
-                      <td className="py-1 px-2 border border-zinc-300" key={i}>
-                        {row[col.name]}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="flex flex-col grow overflow-hidden">
+            <iframe
+              className="h-full"
+              srcDoc={pluginTable(tableConfig, pluginMode, tableData, pluginJs)}
+              title="output"
+              sandbox="allow-scripts"
+              width="100%"
+            ></iframe>
           </div>
         </div>
       ) : (
         <div className="grow mx-auto flex flex-col justify-center items-center gap-2 max-w-sm">
           <div className="text-center">
-            You haven't setup your mock table data yet. In order to preview your
-            plugin, you need to set up your table structure first.
+            You haven't set up your mock table data yet. In order to preview
+            your plugin, you need to set up your table structure first.
           </div>
           <button
             className="bg-zinc-800 text-white px-4 py-2 rounded-lg"
@@ -196,6 +188,7 @@ export default function TableView({
                       <option value="STRING">String</option>
                       <option value="NUMBER">Number</option>
                       <option value="IMAGE">Image</option>
+                      <option value="TRUE_FALSE">String Boolean</option>
                     </select>
                     <button
                       className="bg-zinc-800 text-white px-4 py-2 rounded-md"
