@@ -13,6 +13,7 @@ import TableView from "../components/TableView";
 import { generateTableData } from "../utils/tables";
 import { configCss, configHtml, customEventListenersJs } from "../utils/output";
 import Resizer from "../components/Resizer";
+import TemplateGenerator from "../components/TemplateGeneration";
 
 type LeftViewMode = "CONFIG" | "VIEW" | "EDITOR";
 
@@ -37,6 +38,13 @@ export default function Editor() {
     current: 300,
     initial: 300,
   });
+
+  const [isTemplateGeneratorOpen, setIsTemplateGeneratorOpen] = useState(false);
+
+  const handleGenerateCode = (code: string) => {
+    setJs(code);
+    setIsTemplateGeneratorOpen(false);
+  };
 
   useEffect(() => {
     if (pluginNameInputRef.current && isEditingPluginName) {
@@ -78,8 +86,17 @@ export default function Editor() {
           <button className="bg-zinc-800 hover:bg-zinc-900 rounded-lg px-4 py-2 flex items-center">
             <FiCopy />
           </button>
-          <button className="bg-zinc-800 hover:bg-zinc-900 rounded-lg px-4 py-2 flex items-center">
+          <button
+            className="bg-zinc-800 hover:bg-zinc-900 rounded-lg px-4 py-2 flex items-center"
+            onClick={() => setIsTemplateGeneratorOpen(true)}
+          >
             <BsGear />
+          </button>
+          <button
+            className="bg-zinc-800 hover:bg-zinc-900 rounded-lg px-4 py-2 flex items-center"
+            onClick={() => setIsTemplateGeneratorOpen(true)}
+          >
+            <BsCodeSlash />
           </button>
           <div className="rounded-lg flex overflow-hidden">
             <button
@@ -121,6 +138,7 @@ export default function Editor() {
             defaultLanguage="javascript"
             language="javascript"
             theme="vs-dark"
+            value={js ? js : undefined}
             defaultValue="// some comment"
             onChange={handleEditorChange}
             className="grow"
@@ -207,6 +225,11 @@ export default function Editor() {
           ></iframe>
         </div>
       </div>
+      <TemplateGenerator
+        handleGenerateCode={handleGenerateCode}
+        open={isTemplateGeneratorOpen}
+        onClose={() => setIsTemplateGeneratorOpen(false)}
+      />
     </div>
   );
 }
