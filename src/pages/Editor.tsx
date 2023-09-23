@@ -75,10 +75,10 @@ export default function Editor() {
           </div>
         )}
         <div className="flex gap-2">
-          <button className="bg-zinc-800 rounded-lg px-4 py-2 flex items-center">
+          <button className="bg-zinc-800 hover:bg-zinc-900 rounded-lg px-4 py-2 flex items-center">
             <FiCopy />
           </button>
-          <button className="bg-zinc-800 rounded-lg px-4 py-2 flex items-center">
+          <button className="bg-zinc-800 hover:bg-zinc-900 rounded-lg px-4 py-2 flex items-center">
             <BsGear />
           </button>
           <div className="rounded-lg flex overflow-hidden">
