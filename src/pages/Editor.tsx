@@ -1,12 +1,6 @@
 import CodeEditor, { OnChange } from "@monaco-editor/react";
 import { useState, useRef, useEffect, useMemo } from "react";
-import {
-  BsGear,
-  BsViewStacked,
-  BsPencil,
-  BsCodeSlash,
-  BsTable,
-} from "react-icons/bs";
+import { BsViewStacked, BsPencil, BsCodeSlash, BsTable } from "react-icons/bs";
 import { FiCopy } from "react-icons/fi";
 import { PluginMode, TableConfig, TableData } from "../utils/types";
 import TableView from "../components/TableView";
@@ -83,16 +77,14 @@ export default function Editor() {
           </div>
         )}
         <div className="flex gap-2">
-          <button className="bg-zinc-800 hover:bg-zinc-900 rounded-lg px-4 py-2 flex items-center">
+          <button
+            title="Copy Plugin Code"
+            className="bg-zinc-800 hover:bg-zinc-900 rounded-lg px-4 py-2 flex items-center"
+          >
             <FiCopy />
           </button>
           <button
-            className="bg-zinc-800 hover:bg-zinc-900 rounded-lg px-4 py-2 flex items-center"
-            onClick={() => setIsTemplateGeneratorOpen(true)}
-          >
-            <BsGear />
-          </button>
-          <button
+            title="Generate Template Code"
             className="bg-zinc-800 hover:bg-zinc-900 rounded-lg px-4 py-2 flex items-center"
             onClick={() => setIsTemplateGeneratorOpen(true)}
           >
