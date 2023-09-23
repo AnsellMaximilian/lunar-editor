@@ -224,8 +224,8 @@ export const pluginTable = (
                           const newEditor = document.createElement("outerbase-plugin-editor");
                           newEditor.setAttribute("cellValue", cell.getAttribute("cellValue"));
                           console.log({pluginRect})
-                          newEditor.style.left = pluginRect.left + "px";
-                          newEditor.style.top = pluginRect.bottom + "px";
+                          newEditor.style.left = pluginRect.left - 8 + "px";
+                          newEditor.style.top = pluginRect.bottom + 4 + "px";
                           newEditor.id = "plugin-editor-component"
                           newEditor.addEventListener("click", function(e){
                             e.preventDefault();
