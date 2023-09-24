@@ -15,6 +15,7 @@ import {
 import Resizer from "../components/Resizer";
 import TemplateGenerator from "../components/TemplateGeneration";
 import { Link } from "react-router-dom";
+import { UserButton } from "@clerk/clerk-react";
 
 type LeftViewMode = "CONFIG" | "VIEW" | "EDITOR";
 
@@ -62,7 +63,7 @@ export default function Editor() {
 
   return (
     <div className="bg-zinc-600 h-screen flex flex-col">
-      <div className="text-white p-4 flex justify-between items-center">
+      <div className="text-white px-4 py-2 flex justify-between items-center">
         <div className="flex items-center">
           <Link to="/">
             <img src={iconLight} className="w-16" />
@@ -123,6 +124,9 @@ export default function Editor() {
             >
               Table
             </button>
+          </div>
+          <div className="flex items-center">
+            <UserButton />
           </div>
         </div>
       </div>
