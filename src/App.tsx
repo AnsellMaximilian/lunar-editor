@@ -6,7 +6,7 @@ import Editor from "./pages/Editor";
 
 function App() {
   return (
-    <div className="min-h-screen bg-zinc-700">
+    <div className="min-h-screen flex flex-col">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/editor" element={<Editor />} />

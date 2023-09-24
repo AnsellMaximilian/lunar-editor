@@ -130,15 +130,7 @@ export const pluginTable = (
     <html>
         <head>
             <script>
-              ${js}
-              window.customElements.define(
-                "outerbase-plugin-cell",
-                OuterbasePluginCell_$PLUGIN_ID
-              );
-              window.customElements.define(
-                "outerbase-plugin-editor",
-                OuterbasePluginEditor_$PLUGIN_ID
-              );
+              ${sanitizeComponentNames(js)}
             </script>
             <style>
                 ${columnPluginStyles}
@@ -223,7 +215,6 @@ export const pluginTable = (
                           const pluginRect = pluginCell.getBoundingClientRect();
                           const newEditor = document.createElement("outerbase-plugin-editor");
                           newEditor.setAttribute("cellValue", cell.getAttribute("cellValue"));
-                          console.log({pluginRect})
                           newEditor.style.left = pluginRect.left - 8 + "px";
                           newEditor.style.top = pluginRect.bottom + 4 + "px";
                           newEditor.id = "plugin-editor-component"
@@ -251,3 +242,6 @@ export const pluginTable = (
     </html>
   `;
 };
+
+export const sanitizeComponentNames = (code: string) =>
+  code.replace(/-\$PLUGIN_ID/g, "");

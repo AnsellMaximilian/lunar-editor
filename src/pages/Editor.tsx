@@ -5,9 +5,16 @@ import { FiCopy } from "react-icons/fi";
 import { PluginMode, TableConfig, TableData } from "../utils/types";
 import TableView from "../components/TableView";
 import { generateTableData } from "../utils/tables";
-import { configCss, configHtml, customEventListenersJs } from "../utils/output";
+import iconLight from "../assets/lunar-icon-light.svg";
+import {
+  configCss,
+  configHtml,
+  customEventListenersJs,
+  sanitizeComponentNames,
+} from "../utils/output";
 import Resizer from "../components/Resizer";
 import TemplateGenerator from "../components/TemplateGeneration";
+import { Link } from "react-router-dom";
 
 type LeftViewMode = "CONFIG" | "VIEW" | "EDITOR";
 
@@ -56,26 +63,31 @@ export default function Editor() {
   return (
     <div className="bg-zinc-600 h-screen flex flex-col">
       <div className="text-white p-4 flex justify-between items-center">
-        {isEditingPluginName ? (
-          <input
-            className="bg-transparent outline-none border-none"
-            onFocus={(e) => e.target.select()}
-            ref={pluginNameInputRef}
-            onBlur={() => {
-              if (pluginName.length === 0) setPluginName("Your Plugin Name");
-              setIsEditingPluginName(false);
-            }}
-            value={pluginName}
-            onChange={(e) => setPluginName(e.target.value)}
-          />
-        ) : (
-          <div className="flex gap-2 items-center">
-            <h1 className="text-lg font-medium">{pluginName}</h1>
-            <button onClick={() => setIsEditingPluginName(true)}>
-              <BsPencil />
-            </button>
-          </div>
-        )}
+        <div className="flex items-center">
+          <Link to="/">
+            <img src={iconLight} className="w-16" />
+          </Link>
+          {isEditingPluginName ? (
+            <input
+              className="bg-transparent outline-none border-none"
+              onFocus={(e) => e.target.select()}
+              ref={pluginNameInputRef}
+              onBlur={() => {
+                if (pluginName.length === 0) setPluginName("Your Plugin Name");
+                setIsEditingPluginName(false);
+              }}
+              value={pluginName}
+              onChange={(e) => setPluginName(e.target.value)}
+            />
+          ) : (
+            <div className="flex gap-2 items-center">
+              <h1 className="text-lg font-medium">{pluginName}</h1>
+              <button onClick={() => setIsEditingPluginName(true)}>
+                <BsPencil />
+              </button>
+            </div>
+          )}
+        </div>
         <div className="flex gap-2">
           <button
             title="Copy Plugin Code"
@@ -194,15 +206,7 @@ export default function Editor() {
                           ${configCss}
                         </style>
                         <script>
-                          ${js}
-                          window.customElements.define(
-                            "outerbase-plugin-table",
-                            OuterbasePluginTable_$PLUGIN_ID
-                          );
-                          window.customElements.define(
-                              "outerbase-plugin-configuration",
-                              OuterbasePluginConfiguration_$PLUGIN_ID
-                          );
+                          ${sanitizeComponentNames(js)}
                         </script>
                     </head>
                     <body>
