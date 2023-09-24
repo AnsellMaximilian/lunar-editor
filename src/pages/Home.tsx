@@ -5,6 +5,7 @@ import outerbase from "../assets/outerbase.svg";
 import stars1 from "../assets/stars-1.png";
 import stars2 from "../assets/stars-2.png";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const [moonTranslate, setMoonTranslate] = useState({ x: 0, y: 0 });
@@ -83,9 +84,12 @@ export default function Home() {
                 Create, Debug, and Edit Outerbase Plugins Online
               </p>
               <div className="mt-4">
-                <button className="px-4 py-2 md:px-6 md:py-4 rounded-md bg-zinc-800 hover:bg-zinc-900 text-white text-sm md:text-xl shadow-lg font-bold">
+                <Link
+                  to="/editor"
+                  className="inline-block px-4 py-2 md:px-6 md:py-4 rounded-md bg-zinc-800 hover:bg-zinc-900 text-white text-sm md:text-xl shadow-lg font-bold"
+                >
                   Start Creating <span className="animate-pulse">_</span>
-                </button>
+                </Link>
               </div>
             </div>
           </div>
