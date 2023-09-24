@@ -6,6 +6,7 @@ import stars1 from "../assets/stars-1.png";
 import stars2 from "../assets/stars-2.png";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getTranslateValues } from "../utils/animation";
 
 export default function Home() {
   const [moonTranslate, setMoonTranslate] = useState({ x: 0, y: 0 });
@@ -13,12 +14,6 @@ export default function Home() {
   const [stars2Translate, setStars2Translate] = useState({ x: 0, y: 0 });
   const [astronautTranslate, setAstronautTranslate] = useState({ x: 0, y: 0 });
   useEffect(() => {
-    const getTranslateValues = (e: MouseEvent, moveValue: number) => {
-      const x = (e.clientX * moveValue) / 250;
-      const y = (e.clientY * moveValue) / 250;
-      return { x, y };
-    };
-
     const move: (this: Document, ev: MouseEvent) => void = (e) => {
       setMoonTranslate(getTranslateValues(e, 3));
       setStars1Translate(getTranslateValues(e, -3));

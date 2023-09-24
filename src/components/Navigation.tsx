@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import logoLight from "../assets/lunar-logo-light.svg";
+import { UserButton, useUser } from "@clerk/clerk-react";
 
 export default function Navigation() {
+  const { isSignedIn } = useUser();
+
   return (
     <div className="relative">
       <nav className="p-4 flex items-center z-20">
@@ -34,10 +37,24 @@ export default function Navigation() {
             </Link>
           </li>
         </ul>
-        <div className="ml-auto">
-          <button className="px-4 py-2 text-vs-dark rounded-md bg-white font-bold">
-            Login
-          </button>
+        <div className="ml-auto flex items-center gap-2">
+          {!isSignedIn && (
+            <>
+              <Link
+                to="/sign-in"
+                className="block px-4 py-2 text-vs-dark rounded-md bg-white font-bold shadow-lg hover:bg-gray-200"
+              >
+                Login
+              </Link>
+              <Link
+                to="/sign-up"
+                className="block px-4 py-2 text-white rounded-md bg-purple-900 font-bold shadow-lg hover:bg-purple-950"
+              >
+                Register
+              </Link>
+            </>
+          )}
+          <UserButton afterSignOutUrl="/" />
         </div>
       </nav>
     </div>
