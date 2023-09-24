@@ -52,39 +52,39 @@ export default function Home() {
           />
         </div>
         <Navigation />
-        <div className="relative pb-10">
+        <div className="relative pb-10 px-4 md:px-0">
           <img
             src={moon}
-            className="w-2/3 mx-auto"
+            className="w-full sm:w-2/3 md:w-3/4 lg:w-2/3 mx-auto max-w-3xl"
             style={{
               transform: `translateX(${moonTranslate.x}px) translateY(${moonTranslate.y}px)`,
             }}
           />
 
           <div className="absolute inset-0 text-center text-zinc-800 flex items-center justify-center">
-            <div className="absolute top-[20%] left-[10%] animate-[custom-bounce_3s_infinite]">
+            <div className="absolute top-[10%] md:top-[20%] left-[10%] animate-[custom-bounce_3s_infinite]">
               <img
                 src={astronaut}
-                className="w-[100px]"
+                className="w-[50px] sm:w-[100px]"
                 style={{
                   transform: `translateX(${astronautTranslate.x}px) translateY(${astronautTranslate.y}px) rotate(20deg)`,
                 }}
               />
             </div>
-            <div className="relative">
-              <h1 className="text-2xl md:text-5xl font-bold mb-2 flex gap-3 items-center justify-center">
+            <div className="relative px-4 md:w-full">
+              <h1 className="text-2xl md:text-5xl font-bold md:mb-2 flex gap-3 items-center justify-center">
                 <span>Create</span>
                 <a href="https://outerbase.com/" target="_blank">
-                  <img src={outerbase} />
+                  <img src={outerbase} className="w-32 md:w-auto" />
                 </a>
                 <span>Plugins</span>
               </h1>
-              <p className="text-2xl font-medium">
+              <p className="text-sm md:text-2xl font-medium">
                 Create, Debug, and Edit Outerbase Plugins Online
               </p>
               <div className="mt-4">
-                <button className="px-6 py-4 rounded-md bg-zinc-800 hover:bg-zinc-900 text-white text-xl shadow-lg">
-                  Start Creating
+                <button className="px-4 py-2 md:px-6 md:py-4 rounded-md bg-zinc-800 hover:bg-zinc-900 text-white text-sm md:text-xl shadow-lg font-bold">
+                  Start Creating <span className="animate-pulse">_</span>
                 </button>
               </div>
             </div>
