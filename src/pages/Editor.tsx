@@ -105,7 +105,10 @@ export default function Editor() {
           </button>
           <div className="rounded-lg flex overflow-hidden">
             <button
-              onClick={() => setPluginMode("COLUMN")}
+              onClick={() => {
+                setPluginMode("COLUMN");
+                setRightViewMode("TABLE");
+              }}
               className={`px-4 py-2 ${
                 pluginMode === "COLUMN"
                   ? "bg-zinc-800 hover:bg-zinc-900"
