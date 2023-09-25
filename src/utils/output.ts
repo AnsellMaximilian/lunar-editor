@@ -197,16 +197,22 @@ export const pluginTable = (
                 toggleButton.textContent = pluginNotApplied  ? "\u00D7" : "+";
                 if(pluginNotApplied){
                   cells.forEach(cell => {
-                      const pluginCell = document.createElement("outerbase-plugin-cell");
-                      const pluginContainer = document.createElement("div");
-                      pluginContainer.appendChild(pluginCell)
-                      cell.innerHTML = "";
-                      pluginCell.setAttribute("cellValue", cell.getAttribute("cellValue"))
-                      cell.appendChild(pluginContainer)
-                      pluginCell.addEventListener("click", function(e){
-                        e.preventDefault();
-                        e.stopPropagation();
-                      });
+                      const renderPluginCell = (cellValue) => {
+                        const pluginCell = document.createElement("outerbase-plugin-cell");
+                        const pluginContainer = document.createElement("div");
+                        pluginContainer.appendChild(pluginCell)
+                        cell.innerHTML = "";
+                        pluginCell.setAttribute("cellValue", cellValue)
+                        cell.appendChild(pluginContainer)
+                        pluginCell.addEventListener("click", function(e){
+                          e.preventDefault();
+                          e.stopPropagation();
+                        });
+
+                        return pluginCell
+                      }
+
+                      const pluginCell = renderPluginCell(cell.getAttribute("cellValue"))
 
                       pluginCell.addEventListener("custom-change", (e) => {
                         const {action, value} = e.detail;
@@ -223,6 +229,12 @@ export const pluginTable = (
                             e.stopPropagation();
                           })
                           document.body.appendChild(newEditor);
+                        }else if(action.toLowerCase() === "onstopedit"){
+                          document.querySelector("outerbase-plugin-editor")?.remove();
+                        }else if(action.toLowerCase() === "oncanceledit"){
+                          document.querySelector("outerbase-plugin-editor")?.remove();
+                        }else if(action.toLowerCase() === "updatecell"){
+                          renderPluginCell(value);
                         }
                       })
                   } )
