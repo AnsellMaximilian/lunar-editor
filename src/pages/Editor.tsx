@@ -1,6 +1,12 @@
 import CodeEditor, { OnChange } from "@monaco-editor/react";
 import { useState, useRef, useEffect, useMemo } from "react";
-import { BsViewStacked, BsPencil, BsCodeSlash, BsTable } from "react-icons/bs";
+import {
+  BsViewStacked,
+  BsPencil,
+  BsCodeSlash,
+  BsTable,
+  BsFillCloudFill,
+} from "react-icons/bs";
 import { FiCopy } from "react-icons/fi";
 import { PluginMode, TableConfig, TableData } from "../utils/types";
 import TableView from "../components/TableView";
@@ -15,11 +21,13 @@ import {
 import Resizer from "../components/Resizer";
 import TemplateGenerator from "../components/TemplateGeneration";
 import { Link } from "react-router-dom";
-import { UserButton } from "@clerk/clerk-react";
+import { UserButton, useAuth } from "@clerk/clerk-react";
+import LoginModal from "../components/LoginModal";
 
 type LeftViewMode = "CONFIG" | "VIEW" | "EDITOR";
 
 export default function Editor() {
+  const { userId, isSignedIn } = useAuth();
   const handleEditorChange: OnChange = (value) => {
     setJs(value || "");
   };
@@ -42,10 +50,19 @@ export default function Editor() {
   });
 
   const [isTemplateGeneratorOpen, setIsTemplateGeneratorOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const handleGenerateCode = (code: string) => {
     setJs(code);
     setIsTemplateGeneratorOpen(false);
+  };
+
+  const save = () => {
+    if (!isSignedIn) {
+      setIsLoginModalOpen(true);
+    } else {
+      console.log(userId);
+    }
   };
 
   useEffect(() => {
@@ -90,6 +107,14 @@ export default function Editor() {
           )}
         </div>
         <div className="flex gap-2">
+          <button
+            onClick={save}
+            title="Copy Plugin Code"
+            className="bg-zinc-800 hover:bg-zinc-900 rounded-lg px-4 py-2 flex items-center gap-2"
+          >
+            <BsFillCloudFill />
+            <span>Save</span>
+          </button>
           <button
             title="Copy Plugin Code"
             className="bg-zinc-800 hover:bg-zinc-900 rounded-lg px-4 py-2 flex items-center"
@@ -232,6 +257,10 @@ export default function Editor() {
         handleGenerateCode={handleGenerateCode}
         open={isTemplateGeneratorOpen}
         onClose={() => setIsTemplateGeneratorOpen(false)}
+      />
+      <LoginModal
+        open={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
       />
     </div>
   );
