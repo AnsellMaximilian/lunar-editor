@@ -54,7 +54,8 @@ export const customEventListenersJs = (tableData: TableData | null) => {
   return `
     const config = document.querySelector("#config");
     const pluginConfiguration = document.querySelector("outerbase-plugin-configuration");
-    pluginConfiguration.addEventListener("custom-change", (e) => {
+    if(customElements.get("outerbase-plugin-configuration")){
+      pluginConfiguration.addEventListener("custom-change", (e) => {
         const {action, value} = e.detail;
         pluginConfiguration.setAttribute("configuration", JSON.stringify(value));
         config.style.display = "none";
@@ -68,8 +69,20 @@ export const customEventListenersJs = (tableData: TableData | null) => {
             : ""
         }
         document.body.appendChild(pluginTable)
-        
-    })
+      })
+    }else {
+      config.remove();
+      const pluginTable = document.createElement("outerbase-plugin-table");
+      pluginTable.setAttribute("configuration", JSON.stringify({}));
+      ${
+        tableData
+          ? `pluginTable.setAttribute("tableValue", "${jsonToAttribute(
+              tableData
+            )}");`
+          : ""
+      }
+      document.body.appendChild(pluginTable)
+    }
 `;
 };
 
