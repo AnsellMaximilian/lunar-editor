@@ -54,7 +54,9 @@ export default function Navigation() {
               </Link>
             </>
           )}
-          <UserButton afterSignOutUrl="/" />
+          <div className="p-1 bg-white rounded-full">
+            <UserButton afterSignOutUrl="/" showName />
+          </div>
         </div>
       </nav>
     </div>
