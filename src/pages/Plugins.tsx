@@ -60,7 +60,7 @@ export default function Plugins() {
             [...Array(9)].map((_, i) => (
               <div
                 key={i}
-                className="col-span-4 rounded-md bg-zinc-700 h-28 animate-pulse opacity-80"
+                className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3 rounded-md bg-zinc-700 h-28 animate-pulse opacity-80"
               ></div>
             ))}
           {ownPlugins.map((plugin) => (
