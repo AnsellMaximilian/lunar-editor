@@ -1,5 +1,6 @@
 import { nanoid } from "nanoid";
 import http from "../utils/http";
+import { OuterbaseResponse, Plugin } from "../utils/types";
 
 export const createPlugin = (
   user_id: string,
@@ -14,4 +15,8 @@ export const createPlugin = (
     plugin_type,
     id: nanoid(),
   });
+};
+
+export const getUserPlugins = (user_id: string) => {
+  return http.get<OuterbaseResponse<Plugin>>(`/get-plugins?user_id=${user_id}`);
 };

@@ -6,6 +6,7 @@ import Editor from "./pages/Editor";
 import { ClerkProvider } from "@clerk/clerk-react";
 import SignUpPage from "./pages/SignUp";
 import SignInPage from "./pages/SignIn";
+import Plugins from "./pages/Plugins";
 
 if (!import.meta.env.VITE_REACT_APP_CLERK_PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key");
@@ -22,6 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/editor" element={<Editor />} />
+          <Route path="/plugins" element={<Plugins />} />
           <Route path="/sign-up" element={<SignUpPage />} />
           <Route path="/sign-in" element={<SignInPage />} />
         </Routes>

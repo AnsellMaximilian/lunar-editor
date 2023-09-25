@@ -22,6 +22,14 @@ export default function Navigation() {
           </li>
           <li>
             <Link
+              to="/plugins"
+              className="relative hover:before:content-['>'] before:absolute before:-left-4 before:opacity-0 hover:before:opacity-100 before:transition-all before:duration-500"
+            >
+              Plugins
+            </Link>
+          </li>
+          <li>
+            <Link
               to="/editor"
               className="relative hover:before:content-['>'] before:absolute before:-left-4 before:opacity-0 hover:before:opacity-100 before:transition-all before:duration-500"
             >
@@ -55,7 +63,7 @@ export default function Navigation() {
             </>
           )}
           {isSignedIn && (
-            <div className="p-1 bg-white rounded-full">
+            <div className="p-1 bg-white rounded-full shadow-md shadow-white">
               <UserButton afterSignOutUrl="/" />
             </div>
           )}

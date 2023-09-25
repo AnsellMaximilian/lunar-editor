@@ -26,3 +26,19 @@ export type JsonValue =
   | JsonObject;
 
 export type PluginMode = "TABLE" | "COLUMN";
+
+export interface OuterbaseResponse<T> {
+  success: boolean;
+  response: {
+    count: number;
+    items: T[];
+  };
+}
+
+export interface Plugin {
+  id: string;
+  plugin_name: string;
+  plugin_code: string;
+  plugin_type: PluginMode;
+  visibility: "PRIVATE" | "PUBLIC";
+}
