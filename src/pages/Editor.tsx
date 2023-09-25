@@ -6,6 +6,8 @@ import {
   BsCodeSlash,
   BsTable,
   BsFillCloudFill,
+  BsFillCloudCheckFill,
+  BsFillCloudSlashFill,
 } from "react-icons/bs";
 import { FiCopy } from "react-icons/fi";
 import { PluginMode, TableConfig, TableData } from "../utils/types";
@@ -23,6 +25,7 @@ import TemplateGenerator from "../components/TemplateGeneration";
 import { Link } from "react-router-dom";
 import { UserButton, useAuth } from "@clerk/clerk-react";
 import LoginModal from "../components/LoginModal";
+import { createPlugin } from "../services";
 
 type LeftViewMode = "CONFIG" | "VIEW" | "EDITOR";
 
@@ -33,6 +36,7 @@ export default function Editor() {
   };
 
   const [js, setJs] = useState("");
+  const [oldCode, setOldCode] = useState("");
   const [pluginName, setPluginName] = useState("Your Plugin Name");
   const [isEditingPluginName, setIsEditingPluginName] = useState(false);
   const [rightViewMode, setRightViewMode] = useState<"TABLE" | "PLUGIN">(
@@ -52,18 +56,40 @@ export default function Editor() {
   const [isTemplateGeneratorOpen, setIsTemplateGeneratorOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
+  const [cloudSaveState, setCloudSaveState] = useState<
+    "UP_TO_DATE" | "PENDING_CHANGES" | "SUCCESS" | "LOADING"
+  >("UP_TO_DATE");
+
   const handleGenerateCode = (code: string) => {
     setJs(code);
     setIsTemplateGeneratorOpen(false);
   };
 
-  const save = () => {
+  const save = async () => {
     if (!isSignedIn) {
       setIsLoginModalOpen(true);
     } else {
-      console.log(userId);
+      if (!(cloudSaveState === "UP_TO_DATE")) {
+        try {
+          setCloudSaveState("LOADING");
+          const res = await createPlugin(userId, pluginName, js, pluginMode);
+          if (res.data.success) {
+            setCloudSaveState("SUCCESS");
+            setOldCode(js);
+            setTimeout(() => {
+              setCloudSaveState("UP_TO_DATE");
+            }, 1500);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
     }
   };
+
+  useEffect(() => {
+    if (js !== oldCode) setCloudSaveState("PENDING_CHANGES");
+  }, [js, oldCode]);
 
   useEffect(() => {
     if (pluginNameInputRef.current && isEditingPluginName) {
@@ -112,7 +138,15 @@ export default function Editor() {
             title="Copy Plugin Code"
             className="bg-zinc-800 hover:bg-zinc-900 rounded-lg px-4 py-2 flex items-center gap-2"
           >
-            <BsFillCloudFill />
+            {cloudSaveState === "UP_TO_DATE" ? (
+              <BsFillCloudFill />
+            ) : cloudSaveState === "PENDING_CHANGES" ? (
+              <BsFillCloudSlashFill className="text-yellow-600" />
+            ) : cloudSaveState === "SUCCESS" ? (
+              <BsFillCloudCheckFill className="text-green-600" />
+            ) : (
+              <BsFillCloudSlashFill className="text-yellow-600" />
+            )}
             <span>Save</span>
           </button>
           <button

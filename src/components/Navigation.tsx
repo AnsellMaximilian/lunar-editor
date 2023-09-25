@@ -54,9 +54,11 @@ export default function Navigation() {
               </Link>
             </>
           )}
-          <div className="p-1 bg-white rounded-full">
-            <UserButton afterSignOutUrl="/" />
-          </div>
+          {isSignedIn && (
+            <div className="p-1 bg-white rounded-full">
+              <UserButton afterSignOutUrl="/" />
+            </div>
+          )}
         </div>
       </nav>
     </div>
