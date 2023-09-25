@@ -20,3 +20,7 @@ export const createPlugin = (
 export const getUserPlugins = (user_id: string) => {
   return http.get<OuterbaseResponse<Plugin>>(`/get-plugins?user_id=${user_id}`);
 };
+
+export const getPluginById = (id: string) => {
+  return http.get<OuterbaseResponse<Plugin>>(`/get-plugin?id=${id}`);
+};

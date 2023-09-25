@@ -26,13 +26,12 @@ import { Link, useParams } from "react-router-dom";
 import { UserButton, useAuth } from "@clerk/clerk-react";
 import LoginModal from "../components/LoginModal";
 import { createPlugin } from "../services";
+import { getPluginById } from "../services/plugins";
 
 type LeftViewMode = "CONFIG" | "VIEW" | "EDITOR";
 
 export default function Editor() {
   const { id } = useParams();
-
-  console.log(id);
 
   const { userId, isSignedIn } = useAuth();
   const handleEditorChange: OnChange = (value) => {
@@ -100,6 +99,21 @@ export default function Editor() {
       pluginNameInputRef.current.focus();
     }
   }, [isEditingPluginName, pluginNameInputRef]);
+
+  useEffect(() => {
+    (async () => {
+      if (id) {
+        const res = await getPluginById(id);
+        if (res.data.response.count > 0) {
+          const plugin = res.data.response.items[0];
+          setJs(plugin.plugin_code);
+          setOldCode(plugin.plugin_code);
+          setPluginName(plugin.plugin_name);
+          setPluginMode(plugin.plugin_type);
+        }
+      }
+    })();
+  }, [id]);
 
   const tableData: TableData | null = useMemo(() => {
     if (tableConfig) {
