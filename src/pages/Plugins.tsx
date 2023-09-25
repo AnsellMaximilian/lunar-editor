@@ -9,15 +9,18 @@ import { Plugin } from "../utils/types";
 
 export default function Plugins() {
   const [ownPlugins, setOwnPlugins] = useState<Plugin[]>([]);
+  const [pluginsLoading, setPluginsLoading] = useState(false);
   const { userId } = useAuth();
 
   useEffect(() => {
     (async () => {
       if (userId) {
+        setPluginsLoading(true);
         const res = await getUserPlugins(userId);
 
         if (res.data.success) {
           setOwnPlugins(res.data.response.items);
+          setPluginsLoading(false);
         }
       }
     })();
@@ -52,12 +55,20 @@ export default function Plugins() {
           </Link>
         </div>
         <div className="grid grid-cols-12 gap-4">
+          {pluginsLoading &&
+            ownPlugins.length <= 0 &&
+            [...Array(9)].map((_, i) => (
+              <div
+                key={i}
+                className="col-span-4 rounded-md bg-zinc-700 h-28 animate-pulse opacity-80"
+              ></div>
+            ))}
           {ownPlugins.map((plugin) => (
             <div
               className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3"
               key={plugin.id}
             >
-              <PluginCard name={plugin.plugin_name} type={plugin.plugin_type} />
+              <PluginCard plugin={plugin} />
             </div>
           ))}
         </div>

@@ -22,7 +22,7 @@ import {
 } from "../utils/output";
 import Resizer from "../components/Resizer";
 import TemplateGenerator from "../components/TemplateGeneration";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { UserButton, useAuth } from "@clerk/clerk-react";
 import LoginModal from "../components/LoginModal";
 import { createPlugin } from "../services";
@@ -30,6 +30,10 @@ import { createPlugin } from "../services";
 type LeftViewMode = "CONFIG" | "VIEW" | "EDITOR";
 
 export default function Editor() {
+  const { id } = useParams();
+
+  console.log(id);
+
   const { userId, isSignedIn } = useAuth();
   const handleEditorChange: OnChange = (value) => {
     setJs(value || "");
