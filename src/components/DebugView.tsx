@@ -165,16 +165,23 @@ export default function DebugView({ code, pluginMode }: Props) {
                 debugIndicator.textContent = "\u2713";
                 debugContentMessage.textContent = debug.successMessage;
                 debugContentDescription.textContent = debug.successDescription;
+                debugItem.classList.add("success");
+
             }else { 
                 debugIndicator.textContent = "\u00D7";
                 debugContentMessage.textContent = debug.errorMessage;
                 debugContentDescription.textContent = debug.errorDescription;
-            }
-            if(debug.warning) {
-                debugIndicator.textContent = "!";
-            }
+                if(debug.warning) {
+                  debugIndicator.textContent = "!";
+                  debugItem.classList.add("warning");
 
-            debugItem.classList.add(debug.warning ? "warning" : debugResult ? "success" : "error");
+                }else {
+                  debugItem.classList.add("error");
+
+                }
+            }
+            
+
 
             debugContent.appendChild(debugContentMessage);
             debugContent.appendChild(debugContentDescription);
