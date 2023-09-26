@@ -37,12 +37,13 @@ export default function Navigation() {
             </Link>
           </li>
           <li>
-            <Link
-              to="/editor"
+            <a
+              href="https://outerbase.com/"
+              target="_blank"
               className="relative hover:before:content-['>'] before:absolute before:-left-4 before:opacity-0 hover:before:opacity-100 before:transition-all before:duration-500"
             >
               Outerbase
-            </Link>
+            </a>
           </li>
         </ul>
         <div className="ml-auto flex items-center gap-2">
