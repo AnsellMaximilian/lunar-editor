@@ -29,6 +29,7 @@ import LoginModal from "../components/LoginModal";
 import { createPlugin } from "../services";
 import { getPluginById } from "../services/plugins";
 import DebugView from "../components/DebugView";
+import { copyTextToClipboard } from "../utils/copy";
 
 type LeftViewMode = "CONFIG" | "VIEW" | "EDITOR";
 
@@ -170,6 +171,7 @@ export default function Editor() {
             <span>Save</span>
           </button>
           <button
+            onClick={() => copyTextToClipboard(js)}
             title="Copy Plugin Code"
             className="bg-zinc-800 hover:bg-zinc-900 rounded-lg px-4 py-2 flex items-center"
           >
