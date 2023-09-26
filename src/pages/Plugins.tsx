@@ -54,6 +54,21 @@ export default function Plugins() {
             Create New
           </Link>
         </div>
+        {!userId && (
+          <div className="bg-zinc-700 rounded-md shadow-md overflow-hidden px-2 py-4">
+            <div className=" font-medium mb-2 text-center">
+              Please log in to start saving and editing plugins
+            </div>
+            <div className="flex justify-center">
+              <Link
+                to="/sign-in"
+                className="bg-vs-dark px-4 py-2 text-white rounded-md"
+              >
+                Log In
+              </Link>
+            </div>
+          </div>
+        )}
         <div className="grid grid-cols-12 gap-4">
           {pluginsLoading &&
             ownPlugins.length <= 0 &&
