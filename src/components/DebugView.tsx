@@ -147,6 +147,19 @@ export default function DebugView({ code, pluginMode }: Props) {
               },
               type: "BOTH",
             },
+            {
+              successMessage: "Plugin Editor Found",
+              successDescription:
+                "You have defined an \`outerbase-plugin-editor-$PLUGIN_ID\` component.",
+              errorMessage: "Plugin Editor Not Found",
+              errorDescription:
+                "Make sure to define an \`outerbase-plugin-editor-$PLUGIN_ID\` component.",
+              warning: true,
+              validator: () => {
+                return customElements.get("outerbase-plugin-editor");
+              },
+              type: "COLUMN",
+            },
           ];
           const checklist = document.querySelector("#plugin-debug__checklist");
           debugs.forEach(debug => {
