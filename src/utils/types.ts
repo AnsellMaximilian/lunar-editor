@@ -1,4 +1,15 @@
-export type ColumnType = "STRING" | "NUMBER" | "IMAGE" | "TRUE_FALSE";
+export type ColumnType =
+  | "STRING"
+  | "NUMBER"
+  | "IMAGE"
+  | "TRUE_FALSE"
+  | "BITCOIN_ADDRESS"
+  | "FULL_NAME"
+  | "SONG_NAME"
+  | "INTEGER"
+  | "AUTO_INCREMENT"
+  | "SENTENCE"
+  | "PHONE_NUMBER";
 export type RowValue = string | number;
 export type Row = { [key: string]: RowValue[] };
 export type TableData = Row[];

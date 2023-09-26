@@ -11,6 +11,18 @@ const valueGenerator = (columnType: ColumnType): RowValue => {
       return faker.image.url();
     case "TRUE_FALSE":
       return faker.datatype.boolean() ? "true" : "false";
+    case "BITCOIN_ADDRESS":
+      return faker.finance.bitcoinAddress();
+    case "FULL_NAME":
+      return faker.person.fullName();
+    case "SONG_NAME":
+      return faker.music.songName();
+    case "INTEGER":
+      return faker.number.int();
+    case "SENTENCE":
+      return faker.lorem.sentence();
+    case "PHONE_NUMBER":
+      return faker.phone.number();
     default:
       return faker.word.words();
   }
@@ -21,7 +33,11 @@ export const generateTableData = (tableConfig: TableConfig): TableData => {
   for (let i = 1; i <= tableConfig.rows; i++) {
     rows.push(
       tableConfig.columnConfigs.reduce((row, col) => {
-        return { ...row, [col.name]: valueGenerator(col.type) };
+        return {
+          ...row,
+          [col.name]:
+            col.type === "AUTO_INCREMENT" ? i : valueGenerator(col.type),
+        };
       }, {})
     );
   }

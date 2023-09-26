@@ -189,6 +189,13 @@ export default function TableView({
                       <option value="NUMBER">Number</option>
                       <option value="IMAGE">Image</option>
                       <option value="TRUE_FALSE">String Boolean</option>
+                      <option value="BITCOIN_ADDRESS">Bitcoin Address</option>
+                      <option value="FULL_NAME">Full Name</option>
+                      <option value="SONG_NAME">Song Name</option>
+                      <option value="INTEGER">Integer</option>
+                      <option value="AUTO_INCREMENT">Autor Increment</option>
+                      <option value="SENTENCE">Sentence</option>
+                      <option value="PHONE_NUMBER">Phone Number</option>
                     </select>
                     <button
                       className="bg-zinc-800 text-white px-4 py-2 rounded-md"
