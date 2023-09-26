@@ -8,6 +8,7 @@ import {
   BsFillCloudFill,
   BsFillCloudCheckFill,
   BsFillCloudSlashFill,
+  BsBug,
 } from "react-icons/bs";
 import { FiCopy } from "react-icons/fi";
 import { PluginMode, TableConfig, TableData } from "../utils/types";
@@ -27,6 +28,7 @@ import { UserButton, useAuth } from "@clerk/clerk-react";
 import LoginModal from "../components/LoginModal";
 import { createPlugin } from "../services";
 import { getPluginById } from "../services/plugins";
+import DebugView from "../components/DebugView";
 
 type LeftViewMode = "CONFIG" | "VIEW" | "EDITOR";
 
@@ -42,9 +44,9 @@ export default function Editor() {
   const [oldCode, setOldCode] = useState("");
   const [pluginName, setPluginName] = useState("Your Plugin Name");
   const [isEditingPluginName, setIsEditingPluginName] = useState(false);
-  const [rightViewMode, setRightViewMode] = useState<"TABLE" | "PLUGIN">(
-    "TABLE"
-  );
+  const [rightViewMode, setRightViewMode] = useState<
+    "TABLE" | "PLUGIN" | "DEBUG"
+  >("TABLE");
   const [pluginMode, setPluginMode] = useState<PluginMode>("TABLE");
   const [leftViewMode, setLeftViewMode] = useState<LeftViewMode>("VIEW");
 
@@ -265,6 +267,14 @@ export default function Editor() {
                 <BsViewStacked /> <span>Plugin View</span>
               </button>
             )}
+            <button
+              className={`px-4 py-2 flex gap-2 items-center ${
+                rightViewMode === "DEBUG" ? "bg-vs-dark" : "bg-zinc-800 "
+              }`}
+              onClick={() => setRightViewMode("DEBUG")}
+            >
+              <BsBug /> <span>Debug View</span>
+            </button>
           </div>
           <div
             className={`grow flex-col ${
@@ -303,6 +313,13 @@ export default function Editor() {
             sandbox="allow-scripts"
             width="100%"
           ></iframe>
+          <div
+            className={`grow flex-col ${
+              rightViewMode === "DEBUG" ? "flex" : "hidden"
+            }`}
+          >
+            <DebugView code={js} pluginMode={pluginMode} />
+          </div>
         </div>
       </div>
       <TemplateGenerator
