@@ -131,6 +131,20 @@ export const columnPluginStyles = `
       top: 0;
       left: 0;
     }
+
+    #table-controls {
+      display: flex;
+      justify-content: end;
+      margin-top: 1rem;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      gap: 1rem;
+    }
+
+    #table-controls__page-controls{
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
 `;
 
 export const pluginTable = (
@@ -176,30 +190,68 @@ export const pluginTable = (
                 </tr>
                 </thead>
                 <tbody>
-                    ${tableData
-                      .map(
-                        (row, i) => `
-                        <tr>
-                            <td class="plugin-table__index">
-                            ${i + 1}
-                            </td>
-                            ${tableConfig.columnConfigs
-                              .map(
-                                (col) => `
-                            <td col_id="${col.id}" cellValue="${row[col.name]}">
-                                ${row[col.name]}
-                            </td>
-                            `
-                              )
-                              .join("")}
-                        </tr>
-                    `
-                      )
-                      .join("")}
                 </tbody>
             </table>
+            <div id="table-controls">
+                <div id="table-controls__summary"></div>
+                <div id="table-controls__page-controls">
+                  <button id="table-controls__prev-btn">&lt;</button>
+                  <div>3</div>
+                  <button id="table-controls__next-btn">&gt;</button>
+                </div>
+            </div>
           </div>
           <script>
+            const tableData = ${JSON.stringify(tableData)};
+            const colConfig = ${JSON.stringify(tableConfig.columnConfigs)};
+            const tableBody = document.querySelector("#plugin-table tbody");
+            const tableSummary = document.querySelector("#table-controls__summary");
+            const metadata = {
+              "offset":1,"limit":50,"page":3,"pageCount":Math.ceil(tableData.length / 50),"count":tableData.length,"theme":"light"
+            }
+            
+            const generateTableBody = function(){
+              tableBody.innerHTML = "";
+              tableData.slice(50 * (metadata.page - 1), 50 * metadata.page).forEach((row, i) => {
+                const tr = document.createElement("tr");
+                const indexCol = document.createElement("td");
+                indexCol.textContent = i+1;
+                indexCol.classList.add("plugin-table__index");
+                tr.appendChild(indexCol);
+                colConfig.forEach((col, j) => {
+                  const td = document.createElement("td");
+                  td.setAttribute("col_id", col.id);
+                  td.setAttribute("cellValue", row[col.name]);
+                  td.textContent = row[col.name];
+                  tr.appendChild(td);
+                })
+                tableBody.append(tr);
+              })
+              tableSummary.textContent = "Viewing " + (50 * (metadata.page - 1) + 1) + " - " + 50 * metadata.page + " of " + metadata.count;
+            }
+
+            generateTableBody();
+
+            const prevBtn = document.querySelector("#table-controls__prev-btn");
+            const nextBtn = document.querySelector("#table-controls__next-btn");
+
+            nextBtn.addEventListener("click", function(){
+              if(metadata.page < metadata.pageCount){
+                metadata.page++
+              }
+              generateTableBody();
+
+            })
+
+            prevBtn.addEventListener("click", function(){
+              if(metadata.page > 1 ){
+                metadata.page--
+              }
+              generateTableBody();
+
+            })
+
+
             const columnHeaders = document.querySelectorAll(".plugin-table__column-header");
             columnHeaders.forEach((header) => {
               const toggleButton = header.querySelector("button");
@@ -259,8 +311,6 @@ export const pluginTable = (
                document.querySelector("outerbase-plugin-editor")?.remove();
               })
             });
-
-            
           </script>
         </body>
 
