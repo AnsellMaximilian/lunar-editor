@@ -291,11 +291,12 @@ export default function Editor() {
               pluginJs={js}
             />
           </div>
-          <iframe
-            className={`bg-white grow ${
-              rightViewMode === "PLUGIN" ? "flex" : "hidden"
-            }`}
-            srcDoc={`
+          {tableData && tableConfig ? (
+            <iframe
+              className={`bg-white grow ${
+                rightViewMode === "PLUGIN" ? "flex" : "hidden"
+              }`}
+              srcDoc={`
                 <html>
                     <head>
                         <style>
@@ -307,14 +308,40 @@ export default function Editor() {
                     </head>
                     <body>
                           ${configHtml(tableData)}
-                          <script>${customEventListenersJs(tableData)}</script>
+                          <script>${customEventListenersJs(
+                            tableData,
+                            tableConfig
+                          )}</script>
                     </body>
                 </html>
             `}
-            title="output"
-            sandbox="allow-scripts"
-            width="100%"
-          ></iframe>
+              title="output"
+              sandbox="allow-scripts"
+              width="100%"
+            ></iframe>
+          ) : (
+            <div
+              className={`bg-white grow flex flex-col ${
+                rightViewMode === "PLUGIN" ? "flex" : "hidden"
+              }`}
+            >
+              <div className="grow p-4 bg-white flex flex-col overflow-x-hidden">
+                <div className="grow mx-auto flex flex-col justify-center items-center gap-2 w-[380px]">
+                  <div className="text-center">
+                    You haven't set up your mock table data yet. In order to
+                    preview your plugin, you need to set up your table structure
+                    first.
+                  </div>
+                  <button
+                    className="bg-zinc-800 text-white px-4 py-2 rounded-lg"
+                    onClick={() => setRightViewMode("TABLE")}
+                  >
+                    Table View
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
           <div
             className={`grow flex-col ${
               rightViewMode === "DEBUG" ? "flex" : "hidden"

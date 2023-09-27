@@ -50,37 +50,78 @@ export const configCss = `
     }
 `;
 
-export const customEventListenersJs = (tableData: TableData | null) => {
+export const customEventListenersJs = (
+  tableData: TableData,
+  tableConfig: TableConfig
+) => {
   return `
+    const tableData = ${JSON.stringify(tableData)};
+    const colConfig = ${JSON.stringify(tableConfig.columnConfigs)};
+    const metadata = {
+      "offset":1,"limit":50,"page":1,"pageCount":Math.ceil(tableData.length / 50),"count":tableData.length,"theme":"light"
+    };
+
+    const createPluginTable = () => {
+      const pluginTable = document.createElement("outerbase-plugin-table");
+      pluginTable.setAttribute("metadata", JSON.stringify(metadata));
+      pluginTable.setAttribute("tableValue", JSON.stringify(tableData.slice(50 * (metadata.page - 1), 50 * metadata.page)));
+      return pluginTable;
+    }
+    
+    const addPluginTableListners = (pluginTable) => {
+      pluginTable.addEventListener("custom-change", (e) => {
+        const {action, value} = e.detail;
+         if(action.toLowerCase() === "getnextpage"){
+          const oldPluginTable = document.querySelector("outerbase-plugin-table");
+
+          if(metadata.page < metadata.pageCount){
+            metadata.page++
+          }
+          const pluginTable = createPluginTable();
+          if(oldPluginTable){
+            oldPluginTable.remove();
+            pluginTable.setAttribute("configuration", oldPluginTable.getAttribute("configuration"));
+          }
+          addPluginTableListners(pluginTable);
+          document.body.appendChild(pluginTable)
+        }else if(action.toLowerCase() === "getpreviouspage"){
+          const oldPluginTable = document.querySelector("outerbase-plugin-table");
+          if(metadata.page > 1){
+            metadata.page--
+          }
+          const pluginTable = createPluginTable();
+          if(oldPluginTable){
+            oldPluginTable.remove();
+            pluginTable.setAttribute("configuration", oldPluginTable.getAttribute("configuration"));
+          }
+          addPluginTableListners(pluginTable);
+          document.body.appendChild(pluginTable);
+        }
+      })
+    }
+
+
     const config = document.querySelector("#config");
     const pluginConfiguration = document.querySelector("outerbase-plugin-configuration");
     if(customElements.get("outerbase-plugin-configuration")){
       pluginConfiguration.addEventListener("custom-change", (e) => {
         const {action, value} = e.detail;
-        pluginConfiguration.setAttribute("configuration", JSON.stringify(value));
-        config.style.display = "none";
-        const pluginTable = document.createElement("outerbase-plugin-table");
-        pluginTable.setAttribute("configuration", JSON.stringify(value));
-        ${
-          tableData
-            ? `pluginTable.setAttribute("tableValue", "${jsonToAttribute(
-                tableData
-              )}");`
-            : ""
-        }
-        document.body.appendChild(pluginTable)
+        if(action.toLowerCase() === "onsave"){
+          pluginConfiguration.setAttribute("configuration", JSON.stringify(value));
+          config.style.display = "none";
+          const pluginTable = createPluginTable();
+          pluginTable.setAttribute("configuration", JSON.stringify(value));
+          addPluginTableListners(pluginTable);
+          document.body.appendChild(pluginTable)
+        } 
       })
     }else {
       config.remove();
       const pluginTable = document.createElement("outerbase-plugin-table");
       pluginTable.setAttribute("configuration", JSON.stringify({}));
-      ${
+      ${`pluginTable.setAttribute("tableValue", "${jsonToAttribute(
         tableData
-          ? `pluginTable.setAttribute("tableValue", "${jsonToAttribute(
-              tableData
-            )}");`
-          : ""
-      }
+      )}");`}
       document.body.appendChild(pluginTable)
     }
 `;
@@ -207,7 +248,7 @@ export const pluginTable = (
             const tableBody = document.querySelector("#plugin-table tbody");
             const tableSummary = document.querySelector("#table-controls__summary");
             const metadata = {
-              "offset":1,"limit":50,"page":3,"pageCount":Math.ceil(tableData.length / 50),"count":tableData.length,"theme":"light"
+              "offset":1,"limit":50,"page":1,"pageCount":Math.ceil(tableData.length / 50),"count":tableData.length,"theme":"light"
             }
             
             const generateTableBody = function(){
@@ -227,7 +268,7 @@ export const pluginTable = (
                 })
                 tableBody.append(tr);
               })
-              tableSummary.textContent = "Viewing " + (50 * (metadata.page - 1) + 1) + " - " + 50 * metadata.page + " of " + metadata.count;
+              tableSummary.textContent = "Viewing " + (50 * (metadata.page - 1) + 1) + " - " + Math.min(50, metadata.count) * metadata.page + " of " + metadata.count;
             }
 
             generateTableBody();
