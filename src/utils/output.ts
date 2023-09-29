@@ -321,8 +321,10 @@ export const pluginTable = (
                       const pluginCell = renderPluginCell(cell.getAttribute("cellValue"))
 
                       pluginCell.addEventListener("custom-change", (e) => {
+
                         const {action, value} = e.detail;
                         if(action.toLowerCase() === "onedit"){
+
                           document.querySelector("outerbase-plugin-editor")?.remove();
                           const pluginRect = pluginCell.getBoundingClientRect();
                           const newEditor = document.createElement("outerbase-plugin-editor");
@@ -333,6 +335,16 @@ export const pluginTable = (
                           newEditor.addEventListener("click", function(e){
                             e.preventDefault();
                             e.stopPropagation();
+                          })
+                          newEditor.addEventListener("custom-change", function(e){
+                            const {action, value} = e.detail;
+                            if(action.toLowerCase() === "onstopedit"){
+                              document.querySelector("outerbase-plugin-editor")?.remove();
+                            }else if(action.toLowerCase() === "oncanceledit"){
+                              document.querySelector("outerbase-plugin-editor")?.remove();
+                            }else if(action.toLowerCase() === "updatecell"){
+                              renderPluginCell(value);
+                            }
                           })
                           document.body.appendChild(newEditor);
                         }else if(action.toLowerCase() === "onstopedit"){
