@@ -1,6 +1,14 @@
 import { ColumnType, RowValue, TableConfig, TableData } from "./types";
 import { faker } from "@faker-js/faker";
 
+const generateHTML = () => {
+  return `<main>
+    <h1>${faker.lorem.sentence()}</h1>
+    <p>${faker.lorem.paragraph()}</p>
+    <button>Button</button>
+  </main>`;
+};
+
 const valueGenerator = (columnType: ColumnType): RowValue => {
   switch (columnType) {
     case "STRING":
@@ -23,6 +31,8 @@ const valueGenerator = (columnType: ColumnType): RowValue => {
       return faker.lorem.sentence();
     case "PHONE_NUMBER":
       return faker.phone.number();
+    case "HTML":
+      return generateHTML();
     default:
       return faker.word.words();
   }

@@ -9,6 +9,7 @@ export type ColumnType =
   | "INTEGER"
   | "AUTO_INCREMENT"
   | "SENTENCE"
+  | "HTML"
   | "PHONE_NUMBER";
 export type RowValue = string | number;
 export type Row = { [key: string]: RowValue[] };
