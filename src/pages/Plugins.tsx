@@ -4,13 +4,15 @@ import { BsPuzzleFill } from "react-icons/bs";
 import logoLight from "../assets/lunar-logo-light.svg";
 import { UserButton, useAuth } from "@clerk/clerk-react";
 import { useState, useEffect } from "react";
-import { getUserPlugins } from "../services/plugins";
+import { deletePluginById, getUserPlugins } from "../services/plugins";
 import { Plugin } from "../utils/types";
+import Confirmation from "../components/Confirmation";
 
 export default function Plugins() {
   const [ownPlugins, setOwnPlugins] = useState<Plugin[]>([]);
   const [pluginsLoading, setPluginsLoading] = useState(false);
   const { userId } = useAuth();
+  const [pluginToDeleteId, setPluginToDeleteId] = useState<null | string>(null);
 
   useEffect(() => {
     (async () => {
@@ -25,6 +27,22 @@ export default function Plugins() {
       }
     })();
   }, [userId]);
+
+  const deletePlugin = () => {
+    (async () => {
+      if (pluginToDeleteId && userId) {
+        try {
+          await deletePluginById(pluginToDeleteId, userId);
+          setPluginToDeleteId(null);
+          setOwnPlugins((prev) =>
+            prev.filter((plugin) => plugin.id !== pluginToDeleteId)
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    })();
+  };
 
   return (
     <div className="bg-zinc-600 text-white min-h-screen">
@@ -83,11 +101,19 @@ export default function Plugins() {
               className="col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3"
               key={plugin.id}
             >
-              <PluginCard plugin={plugin} />
+              <PluginCard
+                plugin={plugin}
+                handleDelete={() => setPluginToDeleteId(plugin.id)}
+              />
             </div>
           ))}
         </div>
       </main>
+      <Confirmation
+        open={!!pluginToDeleteId}
+        onClose={() => setPluginToDeleteId(null)}
+        onConfirm={deletePlugin}
+      />
     </div>
   );
 }

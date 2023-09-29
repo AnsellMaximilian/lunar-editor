@@ -8,9 +8,10 @@ import { Link } from "react-router-dom";
 import { Plugin } from "../utils/types";
 interface Props {
   plugin: Plugin;
+  handleDelete: () => void;
 }
 
-export default function PluginCard({ plugin }: Props) {
+export default function PluginCard({ plugin, handleDelete }: Props) {
   return (
     <div className="bg-zinc-700 rounded-md overflow-hidden shadow-md">
       <div className="flex justify-between ">
@@ -39,7 +40,10 @@ export default function PluginCard({ plugin }: Props) {
           >
             <BsArrowsAngleExpand />
           </Link>
-          <button className="bg-zinc-600 hover:bg-zinc-700 px-2 py-2 rounded-md">
+          <button
+            className="bg-zinc-600 hover:bg-zinc-700 px-2 py-2 rounded-md"
+            onClick={handleDelete}
+          >
             <BsTrashFill />
           </button>
         </div>

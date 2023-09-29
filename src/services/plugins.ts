@@ -24,3 +24,7 @@ export const getUserPlugins = (user_id: string) => {
 export const getPluginById = (id: string) => {
   return http.get<OuterbaseResponse<Plugin>>(`/get-plugin?id=${id}`);
 };
+
+export const deletePluginById = (id: string, user_id: string) => {
+  return http.delete(`/delete-plugin?id=${id}&user_id=${user_id}`);
+};
