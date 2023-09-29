@@ -33,6 +33,10 @@ const valueGenerator = (columnType: ColumnType): RowValue => {
       return faker.phone.number();
     case "HTML":
       return generateHTML();
+    case "LONGITUDE":
+      return faker.location.longitude();
+    case "LATITUDE":
+      return faker.location.latitude();
     default:
       return faker.word.words();
   }

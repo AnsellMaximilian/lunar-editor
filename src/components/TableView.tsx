@@ -197,6 +197,8 @@ export default function TableView({
                       <option value="SENTENCE">Sentence</option>
                       <option value="PHONE_NUMBER">Phone Number</option>
                       <option value="HTML">HTML</option>
+                      <option value="LONGITUDE">Longitude</option>
+                      <option value="LATITUDE">Latitude</option>
                     </select>
                     <button
                       className="bg-zinc-800 text-white px-4 py-2 rounded-md"

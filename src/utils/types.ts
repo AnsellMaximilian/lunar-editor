@@ -10,7 +10,9 @@ export type ColumnType =
   | "AUTO_INCREMENT"
   | "SENTENCE"
   | "HTML"
-  | "PHONE_NUMBER";
+  | "PHONE_NUMBER"
+  | "LONGITUDE"
+  | "LATITUDE";
 export type RowValue = string | number;
 export type Row = { [key: string]: RowValue[] };
 export type TableData = Row[];
