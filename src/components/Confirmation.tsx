@@ -1,5 +1,7 @@
 import { Dialog } from "@headlessui/react";
 import astronautAlert from "../assets/astronaut-alert.svg";
+import stars1 from "../assets/stars-1.png";
+import stars2 from "../assets/stars-2.png";
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -24,8 +26,20 @@ export default function Confirmation({
           {/* <Dialog.Title className="font-medium mb-4 text-lg">
             Are You Sure?
           </Dialog.Title> */}
-          <div className="bg-gradient-to-br from-purple-950 via-purple-900 to-purple-950 p-4 rounded-t">
-            <img src={astronautAlert} className="w-48 mx-auto" />
+          <div className="bg-gradient-to-br from-purple-950 via-purple-900 to-purple-950 p-4 rounded-t relative">
+            <div className="absolute inset-0">
+              <img
+                src={stars2}
+                className="w-full h-full object-cover blur-sm"
+              />
+            </div>
+            <div className="absolute inset-0">
+              <img
+                src={stars1}
+                className="w-full h-full object-cover blur-[2px]"
+              />
+            </div>
+            <img src={astronautAlert} className="relative w-48 mx-auto" />
           </div>
           <div className="p-4 rounded-b">
             <Dialog.Title className="font-semibold text-center mb-1 text-lg">
