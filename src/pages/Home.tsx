@@ -199,7 +199,7 @@ export default function Home() {
             <Link to="/">
               <img src={logoLight} className="w-32" />
             </Link>
-            <ul className="flex items-cener gap-6 text-lg font-bold tracking-wider">
+            <ul className="hidden md:flex items-cener gap-6 text-lg font-bold tracking-wider">
               <li>
                 <Link
                   to="/editor"
