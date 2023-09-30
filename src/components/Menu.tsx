@@ -2,7 +2,6 @@ import { Dialog } from "@headlessui/react";
 import { useState, useEffect } from "react";
 import { PluginMode, Theme } from "../utils/types";
 import { BsSun, BsMoon, BsGear, BsCodeSlash } from "react-icons/bs";
-import rocket from "../assets/rocket.svg";
 
 interface Props {
   open: boolean;
@@ -10,7 +9,15 @@ interface Props {
   pluginName: string;
   pluginType: PluginMode;
   theme: Theme;
-  handleConfirmSettings?: () => void;
+  handleConfirmSettings: ({
+    pluginName,
+    pluginType,
+    theme,
+  }: {
+    pluginName: string;
+    pluginType: PluginMode;
+    theme: Theme;
+  }) => void;
 }
 
 export default function Menu({
@@ -19,9 +26,10 @@ export default function Menu({
   pluginName: currentPluginName,
   theme: currentTheme,
   pluginType: currentPluginType,
+  handleConfirmSettings,
 }: Props) {
   const [pluginName, setPluginName] = useState("");
-  const [theme, setTheme] = useState("");
+  const [theme, setTheme] = useState<Theme>("LIGHT");
   const [pluginType, setPluginType] = useState<PluginMode>("TABLE");
   const [tabMode, setTabMode] = useState<"SETTINGS" | "CODE_GENERATION">(
     "SETTINGS"
@@ -34,7 +42,6 @@ export default function Menu({
   return (
     <Dialog open={open} onClose={onClose} className="relative z-50">
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-
       <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
         <Dialog.Panel className="mx-auto rounded bg-zinc-600 text-white p-4 min-w-[600px] max-w-full min-h-[600px] flex flex-col">
           <Dialog.Title className="font-medium mb-4 text-lg">Menu</Dialog.Title>
@@ -133,6 +140,14 @@ export default function Menu({
                   onClick={onClose}
                 >
                   Cancel
+                </button>
+                <button
+                  className="bg-zinc-800 px-4 py-2 rounded-md"
+                  onClick={() =>
+                    handleConfirmSettings({ pluginName, pluginType, theme })
+                  }
+                >
+                  Save Settings
                 </button>
               </div>
             </>

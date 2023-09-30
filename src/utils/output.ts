@@ -1,5 +1,5 @@
 import { jsonToAttribute } from "./attributes";
-import { PluginMode, TableConfig, TableData } from "./types";
+import { PluginMode, TableConfig, TableData, Theme } from "./types";
 
 export const configHtml = (tableData: TableData | null) => `
 <div id="config">
@@ -52,13 +52,14 @@ export const configCss = `
 
 export const customEventListenersJs = (
   tableData: TableData,
-  tableConfig: TableConfig
+  tableConfig: TableConfig,
+  theme: Theme
 ) => {
   return `
     const tableData = ${JSON.stringify(tableData)};
     const colConfig = ${JSON.stringify(tableConfig.columnConfigs)};
     const metadata = {
-      "offset":1,"limit":50,"page":1,"pageCount":Math.ceil(tableData.length / 50),"count":tableData.length,"theme":"light"
+      "offset":1,"limit":50,"page":1,"pageCount":Math.ceil(tableData.length / 50),"count":tableData.length,"theme":"${theme.toLowerCase()}"
     };
 
     const createPluginTable = () => {
@@ -104,6 +105,7 @@ export const customEventListenersJs = (
     const config = document.querySelector("#config");
     const pluginConfiguration = document.querySelector("outerbase-plugin-configuration");
     if(customElements.get("outerbase-plugin-configuration")){
+      pluginConfiguration.setAttribute("metadata", JSON.stringify(metadata))
       pluginConfiguration.addEventListener("custom-change", (e) => {
         const {action, value} = e.detail;
         if(action.toLowerCase() === "onsave"){
@@ -192,7 +194,8 @@ export const pluginTable = (
   tableConfig: TableConfig,
   pluginMode: PluginMode,
   tableData: TableData,
-  js: string
+  js: string,
+  theme: Theme = "LIGHT"
 ) => {
   return `
     <html>
@@ -248,7 +251,7 @@ export const pluginTable = (
             const tableBody = document.querySelector("#plugin-table tbody");
             const tableSummary = document.querySelector("#table-controls__summary");
             const metadata = {
-              "offset":1,"limit":50,"page":1,"pageCount":Math.ceil(tableData.length / 50),"count":tableData.length,"theme":"light"
+              "offset":1,"limit":50,"page":1,"pageCount":Math.ceil(tableData.length / 50),"count":tableData.length,"theme":"${theme.toLocaleLowerCase()}"
             }
             
             const generateTableBody = function(){
@@ -309,6 +312,7 @@ export const pluginTable = (
                         pluginContainer.appendChild(pluginCell)
                         cell.innerHTML = "";
                         pluginCell.setAttribute("cellValue", cellValue)
+                        pluginCell.setAttribute("metadata", JSON.stringify(metadata))
                         cell.appendChild(pluginContainer)
                         pluginCell.addEventListener("click", function(e){
                           e.preventDefault();

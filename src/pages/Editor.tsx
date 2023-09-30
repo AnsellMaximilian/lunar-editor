@@ -300,6 +300,7 @@ export default function Editor() {
               tableConfig={tableConfig}
               pluginMode={pluginMode}
               pluginJs={js}
+              theme={theme}
             />
           </div>
           {tableData && tableConfig ? (
@@ -321,7 +322,8 @@ export default function Editor() {
                           ${configHtml(tableData)}
                           <script>${customEventListenersJs(
                             tableData,
-                            tableConfig
+                            tableConfig,
+                            theme
                           )}</script>
                     </body>
                 </html>
@@ -377,6 +379,12 @@ export default function Editor() {
         pluginName={pluginName}
         theme={theme}
         pluginType={pluginMode}
+        handleConfirmSettings={({ pluginName, pluginType, theme }) => {
+          setPluginMode(pluginType);
+          setPluginName(pluginName);
+          setTheme(theme);
+          setIsSettingsOpen(false);
+        }}
       />
     </div>
   );

@@ -8,6 +8,7 @@ import {
   PluginMode,
   TableConfig,
   TableData,
+  Theme,
 } from "../utils/types";
 import { pluginTable } from "../utils/output";
 
@@ -17,12 +18,14 @@ export default function TableView({
   tableConfig,
   tableData,
   pluginMode,
+  theme,
 }: {
   setTableConfig: Dispatch<React.SetStateAction<TableConfig | null>>;
   tableConfig: TableConfig | null;
   tableData: TableData | null;
   pluginMode: PluginMode;
   pluginJs: string;
+  theme: Theme;
 }) {
   const [tableName, setTableName] = useState("");
   const [tableRows, setTableRows] = useState(10);
@@ -93,7 +96,13 @@ export default function TableView({
           <div className="flex flex-col grow overflow-hidden">
             <iframe
               className="h-full"
-              srcDoc={pluginTable(tableConfig, pluginMode, tableData, pluginJs)}
+              srcDoc={pluginTable(
+                tableConfig,
+                pluginMode,
+                tableData,
+                pluginJs,
+                theme
+              )}
               title="output"
               sandbox="allow-scripts"
               width="100%"
