@@ -9,7 +9,11 @@ interface Props {
   handleGenerateCode: (code: string) => void;
 }
 
-export default function Settings({ open, onClose, handleGenerateCode }: Props) {
+export default function TemplateGeneration({
+  open,
+  onClose,
+  handleGenerateCode,
+}: Props) {
   const [pluginType, setPluginType] = useState<PluginMode>("COLUMN");
   const [includeEditorView, setIncludeEditorView] = useState(false);
   const [includeConfigView, setIncludeConfigView] = useState(false);

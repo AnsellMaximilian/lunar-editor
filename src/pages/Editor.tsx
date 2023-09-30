@@ -9,9 +9,10 @@ import {
   BsFillCloudCheckFill,
   BsFillCloudSlashFill,
   BsBug,
+  BsGrid,
 } from "react-icons/bs";
 import { FiCopy } from "react-icons/fi";
-import { PluginMode, TableConfig, TableData } from "../utils/types";
+import { PluginMode, TableConfig, TableData, Theme } from "../utils/types";
 import TableView from "../components/TableView";
 import { generateTableData } from "../utils/tables";
 import iconLight from "../assets/lunar-icon-light.svg";
@@ -30,6 +31,7 @@ import { createPlugin } from "../services";
 import { getPluginById } from "../services/plugins";
 import DebugView from "../components/DebugView";
 import { copyTextToClipboard } from "../utils/copy";
+import Menu from "../components/Menu";
 
 type LeftViewMode = "CONFIG" | "VIEW" | "EDITOR";
 
@@ -49,6 +51,7 @@ export default function Editor() {
     "TABLE" | "PLUGIN" | "DEBUG"
   >("TABLE");
   const [pluginMode, setPluginMode] = useState<PluginMode>("TABLE");
+  const [theme, setTheme] = useState<Theme>("LIGHT");
   const [leftViewMode, setLeftViewMode] = useState<LeftViewMode>("VIEW");
 
   const [tableConfig, setTableConfig] = useState<TableConfig | null>(null);
@@ -61,6 +64,7 @@ export default function Editor() {
 
   const [isTemplateGeneratorOpen, setIsTemplateGeneratorOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const [cloudSaveState, setCloudSaveState] = useState<
     "UP_TO_DATE" | "PENDING_CHANGES" | "SUCCESS" | "LOADING"
@@ -183,6 +187,13 @@ export default function Editor() {
             onClick={() => setIsTemplateGeneratorOpen(true)}
           >
             <BsCodeSlash />
+          </button>
+          <button
+            title="Settings"
+            className="bg-zinc-800 hover:bg-zinc-900 rounded-lg px-4 py-2 flex items-center"
+            onClick={() => setIsSettingsOpen(true)}
+          >
+            <BsGrid />
           </button>
           <div className="rounded-lg flex overflow-hidden">
             <button
@@ -359,6 +370,13 @@ export default function Editor() {
       <LoginModal
         open={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
+      />
+      <Menu
+        open={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        pluginName={pluginName}
+        theme={theme}
+        pluginType={pluginMode}
       />
     </div>
   );

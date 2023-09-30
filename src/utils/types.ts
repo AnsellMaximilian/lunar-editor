@@ -56,3 +56,5 @@ export interface Plugin {
   plugin_type: PluginMode;
   visibility: "PRIVATE" | "PUBLIC";
 }
+
+export type Theme = "LIGHT" | "DARK";
