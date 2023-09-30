@@ -23,7 +23,6 @@ import {
   sanitizeComponentNames,
 } from "../utils/output";
 import Resizer from "../components/Resizer";
-import TemplateGenerator from "../components/TemplateGeneration";
 import { Link, useParams } from "react-router-dom";
 import { UserButton, useAuth } from "@clerk/clerk-react";
 import LoginModal from "../components/LoginModal";
@@ -62,7 +61,6 @@ export default function Editor() {
     initial: 300,
   });
 
-  const [isTemplateGeneratorOpen, setIsTemplateGeneratorOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
@@ -70,10 +68,9 @@ export default function Editor() {
     "UP_TO_DATE" | "PENDING_CHANGES" | "SUCCESS" | "LOADING"
   >("UP_TO_DATE");
 
-  const handleGenerateCode = (code: string) => {
-    setJs(code);
-    setIsTemplateGeneratorOpen(false);
-  };
+  // const handleGenerateCode = (code: string) => {
+  //   setJs(code);
+  // };
 
   const save = async () => {
     if (!isSignedIn) {
@@ -180,13 +177,6 @@ export default function Editor() {
             className="bg-zinc-800 hover:bg-zinc-900 rounded-lg px-4 py-2 flex items-center"
           >
             <FiCopy />
-          </button>
-          <button
-            title="Generate Template Code"
-            className="bg-zinc-800 hover:bg-zinc-900 rounded-lg px-4 py-2 flex items-center"
-            onClick={() => setIsTemplateGeneratorOpen(true)}
-          >
-            <BsCodeSlash />
           </button>
           <button
             title="Settings"
@@ -364,11 +354,6 @@ export default function Editor() {
           </div>
         </div>
       </div>
-      <TemplateGenerator
-        handleGenerateCode={handleGenerateCode}
-        open={isTemplateGeneratorOpen}
-        onClose={() => setIsTemplateGeneratorOpen(false)}
-      />
       <LoginModal
         open={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
@@ -383,6 +368,10 @@ export default function Editor() {
           setPluginMode(pluginType);
           setPluginName(pluginName);
           setTheme(theme);
+          setIsSettingsOpen(false);
+        }}
+        handleGenerateCode={(code) => {
+          setJs(code);
           setIsSettingsOpen(false);
         }}
       />

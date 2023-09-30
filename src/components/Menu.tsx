@@ -2,6 +2,7 @@ import { Dialog } from "@headlessui/react";
 import { useState, useEffect } from "react";
 import { PluginMode, Theme } from "../utils/types";
 import { BsSun, BsMoon, BsGear, BsCodeSlash } from "react-icons/bs";
+import TemplateGeneration from "./TemplateGeneration";
 
 interface Props {
   open: boolean;
@@ -18,6 +19,7 @@ interface Props {
     pluginType: PluginMode;
     theme: Theme;
   }) => void;
+  handleGenerateCode: (code: string) => void;
 }
 
 export default function Menu({
@@ -27,6 +29,7 @@ export default function Menu({
   theme: currentTheme,
   pluginType: currentPluginType,
   handleConfirmSettings,
+  handleGenerateCode,
 }: Props) {
   const [pluginName, setPluginName] = useState("");
   const [theme, setTheme] = useState<Theme>("LIGHT");
@@ -153,7 +156,9 @@ export default function Menu({
             </>
           )}
           {tabMode === "CODE_GENERATION" && (
-            <div className="grow flex flex-col "></div>
+            <div className="grow">
+              <TemplateGeneration handleGenerateCode={handleGenerateCode} />
+            </div>
           )}
         </Dialog.Panel>
       </div>
