@@ -240,7 +240,7 @@ export const pluginTable = (
                 <div id="table-controls__summary"></div>
                 <div id="table-controls__page-controls">
                   <button id="table-controls__prev-btn">&lt;</button>
-                  <div>3</div>
+                  <div id="table-controls__page-count">3</div>
                   <button id="table-controls__next-btn">&gt;</button>
                 </div>
             </div>
@@ -250,6 +250,7 @@ export const pluginTable = (
             const colConfig = ${JSON.stringify(tableConfig.columnConfigs)};
             const tableBody = document.querySelector("#plugin-table tbody");
             const tableSummary = document.querySelector("#table-controls__summary");
+            const tablePageCount = document.querySelector("#table-controls__page-count");
             const metadata = {
               "offset":1,"limit":50,"page":1,"pageCount":Math.ceil(tableData.length / 50),"count":tableData.length,"theme":"${theme.toLocaleLowerCase()}"
             }
@@ -272,6 +273,8 @@ export const pluginTable = (
                 tableBody.append(tr);
               })
               tableSummary.textContent = "Viewing " + (50 * (metadata.page - 1) + 1) + " - " + Math.min(50, metadata.count) * metadata.page + " of " + metadata.count;
+              tablePageCount.textContent = metadata.page;
+              
             }
 
             generateTableBody();
