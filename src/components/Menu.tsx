@@ -65,9 +65,6 @@ export default function Menu({
             >
               <BsCodeSlash /> <span>Code</span>
             </button>
-            <button className="bg-zinc-800 hover:bg-zinc-900 px-4 py-2">
-              Tab1
-            </button>
           </div>
 
           {tabMode === "SETTINGS" && (
@@ -137,15 +134,15 @@ export default function Menu({
                 </div>
               </div>
 
-              <div className="flex justify-end">
+              <div className="flex justify-end gap-2">
                 <button
-                  className="bg-zinc-800 px-4 py-2 rounded-md"
+                  className="bg-zinc-700 px-4 py-2 rounded-md hover:bg-zinc-900"
                   onClick={onClose}
                 >
                   Cancel
                 </button>
                 <button
-                  className="bg-zinc-800 px-4 py-2 rounded-md"
+                  className="bg-zinc-800 px-4 py-2 rounded-md hover:bg-zinc-900"
                   onClick={() =>
                     handleConfirmSettings({ pluginName, pluginType, theme })
                   }
