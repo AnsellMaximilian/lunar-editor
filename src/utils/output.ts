@@ -7,13 +7,7 @@ export const configHtml = (tableData: TableData | null) => `
     <div id="config__container">
         <div id="config__title">Configure Plugin</div>
         <div id="config__content">
-            <outerbase-plugin-configuration 
-                configuration="{}"
-                ${tableData ? `tableValue="${jsonToAttribute(tableData)}"` : ""}
-                >
-            </outerbase-plugin-configuration>
         </div>
-        
     </div>
     </div>
 </div>
@@ -97,35 +91,57 @@ export const customEventListenersJs = (
           }
           addPluginTableListners(pluginTable);
           document.body.appendChild(pluginTable);
+        } else if(action.toLowerCase() === "configureplugin"){
+          const config = document.querySelector("#config");
+          config.style.display = "block";
+          const oldPluginTable = document.querySelector("outerbase-plugin-table");
+          let oldConfig;
+          if(oldPluginTable){
+            oldConfig = oldPluginTable.getAttribute("configuration");
+          }
+          configSetup(oldConfig)
         }
       })
     }
 
 
-    const config = document.querySelector("#config");
-    const pluginConfiguration = document.querySelector("outerbase-plugin-configuration");
-    if(customElements.get("outerbase-plugin-configuration")){
-      pluginConfiguration.setAttribute("metadata", JSON.stringify(metadata))
-      pluginConfiguration.addEventListener("custom-change", (e) => {
-        const {action, value} = e.detail;
-        if(action.toLowerCase() === "onsave"){
-          pluginConfiguration.setAttribute("configuration", JSON.stringify(value));
-          config.style.display = "none";
-          const pluginTable = createPluginTable();
-          pluginTable.setAttribute("configuration", JSON.stringify(value));
-          addPluginTableListners(pluginTable);
-          document.body.appendChild(pluginTable)
-        } 
-      })
-    }else {
-      config.remove();
-      const pluginTable = document.createElement("outerbase-plugin-table");
-      pluginTable.setAttribute("configuration", JSON.stringify({}));
-      ${`pluginTable.setAttribute("tableValue", "${jsonToAttribute(
-        tableData
-      )}");`}
-      document.body.appendChild(pluginTable)
+    const configSetup = (oldConfig) => {
+      const config = document.querySelector("#config");
+      if(customElements.get("outerbase-plugin-configuration")){
+        config.querySelector("outerbase-plugin-configuration")?.remove();
+        const pluginConfiguration = document.createElement("outerbase-plugin-configuration");
+        pluginConfiguration.setAttribute("configuration", "{}");
+        pluginConfiguration.setAttribute("tableValue", JSON.stringify(tableData));
+        config.querySelector("#config__content").appendChild(pluginConfiguration);
+
+        if(oldConfig){
+          pluginConfiguration.setAttribute("configuration", oldConfig);
+        }
+        pluginConfiguration.setAttribute("metadata", JSON.stringify(metadata))
+        pluginConfiguration.addEventListener("custom-change", (e) => {
+          document.querySelector("outerbase-plugin-table")?.remove();
+          const {action, value} = e.detail;
+          if(action.toLowerCase() === "onsave"){
+            pluginConfiguration.setAttribute("configuration", JSON.stringify(value));
+            config.style.display = "none";
+            const pluginTable = createPluginTable();
+            pluginTable.setAttribute("configuration", JSON.stringify(value));
+            addPluginTableListners(pluginTable);
+            document.body.appendChild(pluginTable)
+          } 
+        })
+      }else {
+        config.style.display = "none";
+        const pluginTable = document.createElement("outerbase-plugin-table");
+        pluginTable.setAttribute("configuration", JSON.stringify({}));
+        ${`pluginTable.setAttribute("tableValue", "${jsonToAttribute(
+          tableData
+        )}");`}
+        document.body.appendChild(pluginTable)
+      }
     }
+
+    configSetup()
 `;
 };
 
