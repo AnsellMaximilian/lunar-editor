@@ -1,7 +1,7 @@
 import { jsonToAttribute } from "./attributes";
 import { PluginMode, TableConfig, TableData, Theme } from "./types";
 
-export const configHtml = (tableData: TableData | null) => `
+export const configHtml = () => `
 <div id="config">
     <div id="config__backdrop">
     <div id="config__container">

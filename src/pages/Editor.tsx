@@ -309,7 +309,7 @@ export default function Editor() {
                         </script>
                     </head>
                     <body>
-                          ${configHtml(tableData)}
+                          ${configHtml()}
                           <script>${customEventListenersJs(
                             tableData,
                             tableConfig,
