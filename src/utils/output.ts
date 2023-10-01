@@ -238,7 +238,7 @@ export const pluginTable = (
                             ${
                               pluginMode === "COLUMN"
                                 ? `
-                                <button>+</button>
+                                <button col_id="${col.id}">+</button>
                             `
                                 : ""
                             }
@@ -290,6 +290,7 @@ export const pluginTable = (
               })
               tableSummary.textContent = "Viewing " + (50 * (metadata.page - 1) + 1) + " - " + Math.min(50, metadata.count) * metadata.page + " of " + metadata.count;
               tablePageCount.textContent = metadata.page;
+
               
             }
 
@@ -303,7 +304,6 @@ export const pluginTable = (
                 metadata.page++
               }
               generateTableBody();
-              addToggleListeners();
 
             })
 
@@ -312,71 +312,59 @@ export const pluginTable = (
                 metadata.page--
               }
               generateTableBody();
-              addToggleListeners();
 
             })
 
-            const addToggleListeners = () => {
-              const columnHeaders = document.querySelectorAll(".plugin-table__column-header");
-              columnHeaders.forEach((header) => {
-                const toggleButton = header.querySelector("button");
-                const colId = header.getAttribute("col_id");
-                const cells = document.querySelectorAll(\`td[col_id="\${colId}"]\`);
-                toggleButton.addEventListener('click', function() {
-                  const pluginNotApplied = toggleButton.textContent.trim() === "+";
-                  toggleButton.textContent = pluginNotApplied  ? "\u00D7" : "+";
-                  if(pluginNotApplied){
-                    cells.forEach((cell, i) => {
-                        const renderPluginCell = (cellValue) => {
-                          const pluginCell = document.createElement("outerbase-plugin-cell");
-                          const pluginContainer = document.createElement("div");
-                          pluginContainer.appendChild(pluginCell)
-                          cell.innerHTML = "";
-                          pluginCell.setAttribute("cellValue", cellValue);
-                          pluginCell.setAttribute("metadata", JSON.stringify(metadata));
-                          pluginCell.setAttribute("tableValue", JSON.stringify(tableData.slice(50 * (metadata.page - 1), 50 * metadata.page)));
-                          pluginCell.setAttribute("rowValue", JSON.stringify(tableData.slice(50 * (metadata.page - 1), 50 * metadata.page)[i]));
-                          cell.appendChild(pluginContainer)
-                          pluginCell.addEventListener("click", function(e){
-                            e.preventDefault();
-                            e.stopPropagation();
-                          });
+            function toggleButtonListener() {
+              const colId = this.getAttribute("col_id"); 
+              const toggleHeader = document.querySelector(\`td[col_id="\${colId}"]\`);
+              const pluginNotApplied = toggleHeader.getAttribute("plugin_applied") !== "yes";
+              this.textContent = pluginNotApplied  ? "\u00D7" : "+";
+              const cells = document.querySelectorAll(\`td[col_id="\${colId}"]\`);
+              if(pluginNotApplied){
+                toggleHeader.setAttribute("plugin_applied", "yes")
+                cells.forEach((cell, i) => {
+                    const renderPluginCell = (cellValue) => {
+                      const pluginCell = document.createElement("outerbase-plugin-cell");
+                      const pluginContainer = document.createElement("div");
+                      pluginContainer.appendChild(pluginCell)
+                      cell.innerHTML = "";
+                      pluginCell.setAttribute("cellValue", cellValue);
+                      pluginCell.setAttribute("metadata", JSON.stringify(metadata));
+                      pluginCell.setAttribute("tableValue", JSON.stringify(tableData.slice(50 * (metadata.page - 1), 50 * metadata.page)));
+                      pluginCell.setAttribute("rowValue", JSON.stringify(tableData.slice(50 * (metadata.page - 1), 50 * metadata.page)[i]));
+                      cell.appendChild(pluginContainer)
+                      pluginCell.addEventListener("click", function(e){
+                        e.preventDefault();
+                        e.stopPropagation();
+                      });
 
-                          return pluginCell
-                        }
+                      return pluginCell
+                    }
 
-                        const pluginCell = renderPluginCell(cell.getAttribute("cellValue"))
+                    const pluginCell = renderPluginCell(cell.getAttribute("cellValue"))
 
-                        pluginCell.addEventListener("custom-change", (e) => {
+                    pluginCell.addEventListener("custom-change", (e) => {
 
+                      const {action, value} = e.detail;
+                      if(action.toLowerCase() === "onedit"){
+
+                        document.querySelector("outerbase-plugin-editor")?.remove();
+                        const pluginRect = pluginCell.getBoundingClientRect();
+                        const newEditor = document.createElement("outerbase-plugin-editor");
+                        newEditor.setAttribute("cellValue", cell.getAttribute("cellValue"));
+                        newEditor.setAttribute("tableValue", JSON.stringify(tableData.slice(50 * (metadata.page - 1), 50 * metadata.page)));
+                        newEditor.setAttribute("rowValue", JSON.stringify(tableData.slice(50 * (metadata.page - 1), 50 * metadata.page)[i]));
+                        newEditor.style.left = pluginRect.left - 8 + "px";
+                        newEditor.style.top = pluginRect.bottom + 4 + "px";
+                        newEditor.id = "plugin-editor-component"
+                        newEditor.addEventListener("click", function(e){
+                          e.preventDefault();
+                          e.stopPropagation();
+                        })
+                        newEditor.addEventListener("custom-change", function(e){
                           const {action, value} = e.detail;
-                          if(action.toLowerCase() === "onedit"){
-
-                            document.querySelector("outerbase-plugin-editor")?.remove();
-                            const pluginRect = pluginCell.getBoundingClientRect();
-                            const newEditor = document.createElement("outerbase-plugin-editor");
-                            newEditor.setAttribute("cellValue", cell.getAttribute("cellValue"));
-                            newEditor.setAttribute("tableValue", JSON.stringify(tableData.slice(50 * (metadata.page - 1), 50 * metadata.page)));
-                            newEditor.setAttribute("rowValue", JSON.stringify(tableData.slice(50 * (metadata.page - 1), 50 * metadata.page)[i]));
-                            newEditor.style.left = pluginRect.left - 8 + "px";
-                            newEditor.style.top = pluginRect.bottom + 4 + "px";
-                            newEditor.id = "plugin-editor-component"
-                            newEditor.addEventListener("click", function(e){
-                              e.preventDefault();
-                              e.stopPropagation();
-                            })
-                            newEditor.addEventListener("custom-change", function(e){
-                              const {action, value} = e.detail;
-                              if(action.toLowerCase() === "onstopedit"){
-                                document.querySelector("outerbase-plugin-editor")?.remove();
-                              }else if(action.toLowerCase() === "oncanceledit"){
-                                document.querySelector("outerbase-plugin-editor")?.remove();
-                              }else if(action.toLowerCase() === "updatecell"){
-                                renderPluginCell(value);
-                              }
-                            })
-                            document.body.appendChild(newEditor);
-                          }else if(action.toLowerCase() === "onstopedit"){
+                          if(action.toLowerCase() === "onstopedit"){
                             document.querySelector("outerbase-plugin-editor")?.remove();
                           }else if(action.toLowerCase() === "oncanceledit"){
                             document.querySelector("outerbase-plugin-editor")?.remove();
@@ -384,11 +372,31 @@ export const pluginTable = (
                             renderPluginCell(value);
                           }
                         })
-                    } )
-                  }else {
-                    cells.forEach(cell => cell.innerHTML =  cell.getAttribute("cellValue") )
-                  }
-                });
+                        document.body.appendChild(newEditor);
+                      }else if(action.toLowerCase() === "onstopedit"){
+                        document.querySelector("outerbase-plugin-editor")?.remove();
+                      }else if(action.toLowerCase() === "oncanceledit"){
+                        document.querySelector("outerbase-plugin-editor")?.remove();
+                      }else if(action.toLowerCase() === "updatecell"){
+                        renderPluginCell(value);
+                      }
+                    })
+                } )
+              }else {
+                toggleHeader.setAttribute("plugin_applied", "no")
+                cells.forEach(cell => cell.innerHTML =  cell.getAttribute("cellValue") )
+              }
+            }
+
+            const addToggleListeners = () => {
+              const columnHeaders = document.querySelectorAll(".plugin-table__column-header");
+              columnHeaders.forEach((header) => {
+                const toggleButton = header.querySelector("button");
+                const colId = header.getAttribute("col_id");
+                toggleButton.setAttribute("col_id", colId);
+                toggleButton.removeEventListener('click', toggleButtonListener);
+
+                toggleButton.addEventListener('click', toggleButtonListener);
                 document.addEventListener("click", function(event){
                   document.querySelector("outerbase-plugin-editor")?.remove();
                 })
